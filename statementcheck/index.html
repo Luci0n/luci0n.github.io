@@ -107,7 +107,7 @@ function build(rows,opts={}){
     if(parsedAmount.error){issue('Amount: '+parsedAmount.error);continue;}
     const cents=parsedAmount.cents*(invert?-1:1);if(!Number.isSafeInteger(cents)){issue('Amount too large');continue;}
     const payee=val('payee'),description=val('description'),reference=val('reference');
-    for(const value of [payee,description,reference])if(/^[=+@\t\r]/.test(value))issue('Unsafe spreadsheet formula-like text field. Edit the source before exporting','error');
+    for(const value of [payee,description,reference])if(/^[=+\-@\t\r]/.test(value))issue('Unsafe spreadsheet formula-like text field. Edit the source before exporting','error');
     const key=JSON.stringify([parsedDate.iso,cents,payee,description,reference]);if(seen.has(key))issue('Exact duplicate of '+seen.get(key)+' — review before import','warning');else seen.set(key,source+':'+line);
     outputs.push({source,line,date:parsedDate.iso,cents,payee,description,reference});totalCents+=cents;
   }
@@ -115,7 +115,8 @@ function build(rows,opts={}){
 }
 function escapeCSV(value){const s=String(value??'');return /[",\n\r]/.test(s)?'"'+s.replaceAll('"','""')+'"':s;}
 function toCSV(records){return records.map(r=>r.map(escapeCSV).join(',')).join('\r\n')+'\r\n';}
-function toXero(result){return toCSV([DEFAULT_HEADERS,...result.outputs.map(x=>[x.date.replaceAll('-', '/'),(x.cents/100).toFixed(2),x.payee,x.description,x.reference])]);}
+function formatCents(cents){const abs=Math.abs(cents);return (cents<0?'-':'')+Math.floor(abs/100)+'.'+String(abs%100).padStart(2,'0');}
+function toXero(result){return toCSV([DEFAULT_HEADERS,...result.outputs.map(x=>[x.date.replaceAll('-', '/'),formatCents(x.cents),x.payee,x.description,x.reference])]);}
 function toAudit(result){return toCSV([['Source','Input line','Severity','Finding'],...result.issues.map(x=>[x.source,x.line,x.severity,x.message])]);}
 return {parseCSV,detectDelimiter,parseAmount,parseDate,detectColumns,build,toXero,toAudit};
 });
