@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Prepare bank statements for Xero: supported CSV dates, signed debit and credit amounts, invalid separators, missing transactions and a safe conversion checklist.">
+<link rel="canonical" href="https://luci0n.github.io/statementcheck/xero-csv-format.html">
+<title>Xero Bank CSV Format: Dates, Amounts & Common Import Errors | StatementCheck</title>
+<style>
+:root{font:16px/1.65 system-ui,-apple-system,Segoe UI,sans-serif;color:#193044;background:#f5f8fa}
+*{box-sizing:border-box}body{margin:0}header{background:#132535;color:white;padding:17px max(20px,calc((100vw - 870px)/2))}
+header a{color:#b3f4df;text-decoration:none}main{max-width:870px;margin:0 auto;padding:40px 20px 70px}
+h1{line-height:1.15;letter-spacing:-1px;font-size:clamp(30px,5vw,47px)}h2{margin:32px 0 7px;line-height:1.3}
+a{color:#126785}code,pre{font:14px/1.55 ui-monospace,Consolas,monospace;background:#e8eef1}
+pre{padding:16px;overflow:auto;border-radius:12px}code{padding:2px 4px}.action{display:inline-block;padding:12px 18px;background:#146d64;border-radius:9px;color:#fff;text-decoration:none;font-weight:700}
+.note{border-left:4px solid #318c82;padding:12px 18px;background:#e7f5f1;margin:22px 0}.muted{color:#587384;font-size:13px}
+footer{border-top:1px solid #cedde4;padding:20px;color:#587384;font-size:13px}table{border-collapse:collapse;width:100%}td,th{padding:9px;border:1px solid #c8d8e0;text-align:left}th{background:#e2edf0}
+</style></head>
+<body><header><a href="/statementcheck/"><strong>StatementCheck</strong> · Free bank CSV checker</a></header>
+<main><p class="muted">Independent guide · October 2026</p>
+<h1>How to prepare a bank statement CSV for Xero</h1>
+<p>A failed bank import often comes down to date formats, debit/credit signs, or extra columns exported by the bank. This guide follows <a href="https://central.xero.com/0/article/Import-a-CSV-bank-statement">Xero's official CSV bank import instructions</a>. It does not replace reconciliation against your original statement.</p>
+<div class="note"><strong>In brief:</strong> One transaction per row, a date, and one signed amount. Money in is positive, money out is negative.</div>
+<h2>A minimal CSV example</h2>
+<pre>Date,Amount,Payee,Description,Reference
+2026/10/08,-12.50,Coffee shop,Office coffee,TX1001
+2026/10/09,1025.00,Client,Invoice payment,TX1002</pre>
+<p>These are synthetic transactions. The first is an expense; the second is income. Xero lets you map source columns during the import process, but both expense and income amounts must be in the same signed Amount column.</p>
+<h2>Date formats that Xero supports</h2>
+<p>Xero's documentation lists <code>DD/MM/YYYY</code>, <code>MM/DD/YYYY</code>, and <code>YYYY/MM/DD</code>, among others. StatementCheck exports <code>YYYY/MM/DD</code> to avoid swapping the day and month. October 8, 2026 becomes <code>2026/10/08</code>. Verify ambiguous source dates: <code>04/05/2026</code> can mean two different days.</p>
+<h2>Correct debit and credit signs</h2>
+<table><thead><tr><th>Transaction</th><th>Amount to import</th></tr></thead>
+<tbody><tr><td>Payment received</td><td><code>125.00</code></td></tr>
+<tr><td>Expense / withdrawal</td><td><code>-12.50</code></td></tr>
+<tr><td>Credit card purchase</td><td><code>-12.50</code></td></tr>
+<tr><td>Credit card payment</td><td><code>125.00</code></td></tr></tbody></table>
+<p>If your bank exports separate debit and credit columns, translate every debit to a negative amount and every credit to a positive amount. Confirm the conventions in your particular bank export before importing.</p>
+<h2>Common CSV import failures</h2>
+<h3>Invalid or ambiguous dates</h3><p>Inspect an unambiguous date in your source or confirm the format in the bank's export settings. Never silently guess between day-first and month-first formats.</p>
+<h3>Incorrect amounts</h3><p>Don't strip thousands separators blindly. In one locale <code>1,23</code> means 1.23; in another it is invalid grouping. Confirm the decimal locale and compare the source net amount to the converted net amount.</p>
+<h3>Missing rows</h3><p>Remove empty rows and use unique column names in the first header row. Xero may also flag or exclude transactions it already holds. Compare source and output transaction counts, dates and totals, then review the Xero import screen before completing the import.</p>
+<h3>Too many rows or unnecessary fields</h3><p>Xero currently limits CSV imports to 100,000 rows. Remove columns with opening and closing balances, bank account numbers and other unneeded fields. Do not upload bank credentials.</p>
+<h2>Check the source file before importing</h2><p>StatementCheck maps source columns, validates amount formatting and dates, flags duplicates and provides an audit report. It runs inside your browser and never connects to your bank or Xero.</p>
+<p><a class="action" href="/statementcheck/">Open the free StatementCheck converter →</a></p>
+<div class="note"><strong>Final safety check:</strong> This is formatting assistance, not accounting advice or verification of the underlying statement. Confirm transaction counts, net balances, signs and duplicates against the original, and inspect Xero's import preview.</div>
+<p class="muted">Source: <a href="https://central.xero.com/0/article/Import-a-CSV-bank-statement">Xero Central: Import a bank statement in CSV format</a>. Independent from and unaffiliated with Xero Limited.</p>
+</main><footer>StatementCheck · Browser-only · No tracking</footer></body></html>
