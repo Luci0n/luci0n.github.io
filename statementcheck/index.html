@@ -21,7 +21,7 @@
 <h3 style="font-size:14px;margin-bottom:4px">Findings <span id="issuesCount" class="badge">0</span></h3><div class="tablewrap" style="max-height:150px"><table><thead><tr><th>Source / row</th><th>Severity</th><th>Finding</th></tr></thead><tbody id="issues"><tr><td colspan="3">No validation performed</td></tr></tbody></table></div>
 <div class="buttons"><button class="primary" id="download" disabled>Download Xero CSV</button><button class="secondary" id="audit" disabled>Download audit CSV</button></div><div class="warning"><b>Before importing:</b> This is a format converter, not bank/accounting verification. Check direction of payments, statement balances, potential duplicates already in Xero, and your locale. Your accounting system performs the final import validation. Do not use this tool with PDF statements.</div>
 </section></div>
-<details><summary>What does the converter change?</summary><p>Converts source dates to unambiguous ISO dates, normalizes amounts to signed two-decimal numbers, merges debit/credit columns when necessary, and maps optional payee, description and reference. It flags invalid dates, ambiguous amounts, malformed CSV and repeated records. Repeated records remain in the preview—review them before importing. The tool never contacts Xero or your bank.</p><p>Supported target fields are Date, Amount, Payee, Description, Reference. <a href="https://central.xero.com/0/article/Import-a-CSV-bank-statement" rel="noopener noreferrer" target="_blank">Read Xero's official bank CSV instructions.</a></p><p class="fineprint">This tool is independent from and not endorsed by Xero. It does not constitute accounting advice. Avoid opening an untrusted exported CSV in a spreadsheet without reviewing formula warnings.</p></details>
+<details><summary>What does the converter change?</summary><p>Converts source dates to YYYY/MM/DD (a documented Xero import format), normalizes amounts to signed two-decimal numbers, merges debit/credit columns when necessary, and maps optional payee, description and reference. It flags invalid dates, ambiguous amounts, malformed CSV and repeated records. Repeated records remain in the preview—review them before importing. The tool never contacts Xero or your bank.</p><p>Supported target fields are Date, Amount, Payee, Description, Reference. <a href="https://central.xero.com/0/article/Import-a-CSV-bank-statement" rel="noopener noreferrer" target="_blank">Read Xero's official bank CSV instructions.</a></p><p class="fineprint">This tool is independent from and not endorsed by Xero. It does not constitute accounting advice. Avoid opening an untrusted exported CSV in a spreadsheet without reviewing formula warnings.</p></details>
 </main><footer>StatementCheck · Browser-only, no telemetry · Your financial data stays on your device</footer>
 <script>
 /* StatementCheck — local-only CSV bank import preparation. MIT licensed demo engine. */
@@ -54,18 +54,27 @@ function parseAmount(input,decimal='auto'){
   if(chosen==='auto'){
     const dot=s.lastIndexOf('.'),comma=s.lastIndexOf(',');
     if(dot>=0&&comma>=0)chosen=dot>comma?'.':',';
-    else if(dot>=0||comma>=0){const sep=dot>=0?'.':',';const pieces=s.split(sep);if(pieces.length===2&&pieces[1].length===3&&pieces[0].length<=3) return {error:'Ambiguous decimal/thousands separator — choose a locale explicitly'};chosen=pieces.length>2||pieces[1]?.length===3?'none':sep;}
-    else chosen='none';
+    else if(dot>=0||comma>=0){
+      const sep=dot>=0?'.':',',pieces=s.split(sep);
+      if(pieces.length===2&&pieces[1].length===3)return {error:'Ambiguous decimal/thousands separator — choose a locale explicitly'};
+      if(pieces.length>2)chosen=sep==='.'?',':'.';
+      else chosen=sep;
+    }else chosen='none';
   }
   if(chosen==='none'){
-    if(/[.,]/.test(s))return {error:'Unexpected separator in whole-number mode'};
-    return {cents:(negative?-1:1)*Number(s)*100};
+    if(!/^\d+$/.test(s))return {error:'Unexpected separator in whole-number mode'};
+    const cents=Number(s)*100;
+    return Number.isSafeInteger(cents)?{cents:(negative?-1:1)*cents}:{error:'Amount exceeds safe numeric range'};
   }
+  if(chosen!=='.'&&chosen!==',')return {error:'Invalid decimal locale'};
   const group=chosen==='.'?',':'.';
+  const escapedGroup=group==='.'?'\\.':',';
+  const escapedDecimal=chosen==='.'?'\\.':',';
+  const plain=new RegExp('^\\d+(?:'+escapedDecimal+'\\d{1,2})?$');
+  const grouped=new RegExp('^\\d{1,3}(?:'+escapedGroup+'\\d{3})+(?:'+escapedDecimal+'\\d{1,2})?$');
+  if(!plain.test(s)&&!grouped.test(s))return {error:'Invalid digit grouping or decimal format'};
   const normalized=s.replaceAll(group,'');
   const parts=normalized.split(chosen);
-  if(parts.length>2||!parts.every(p=>/^\d*$/.test(p))||parts[0]==='')return {error:'Invalid decimal format'};
-  if(parts[1]&&parts[1].length>2)return {error:'More than two decimal places'};
   const cents=Number(parts[0])*100+Number((parts[1]||'').padEnd(2,'0'));
   if(!Number.isSafeInteger(cents))return {error:'Amount exceeds safe numeric range'};
   return {cents:(negative?-1:1)*cents};
@@ -105,7 +114,7 @@ function build(rows,opts={}){
 }
 function escapeCSV(value){const s=String(value??'');return /[",\n\r]/.test(s)?'"'+s.replaceAll('"','""')+'"':s;}
 function toCSV(records){return records.map(r=>r.map(escapeCSV).join(',')).join('\r\n')+'\r\n';}
-function toXero(result){return toCSV([DEFAULT_HEADERS,...result.outputs.map(x=>[x.date,(x.cents/100).toFixed(2),x.payee,x.description,x.reference])]);}
+function toXero(result){return toCSV([DEFAULT_HEADERS,...result.outputs.map(x=>[x.date.replaceAll('-', '/'),(x.cents/100).toFixed(2),x.payee,x.description,x.reference])]);}
 function toAudit(result){return toCSV([['Source','Input line','Severity','Finding'],...result.issues.map(x=>[x.source,x.line,x.severity,x.message])]);}
 return {parseCSV,detectDelimiter,parseAmount,parseDate,detectColumns,build,toXero,toAudit};
 });
