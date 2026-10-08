@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101c27"><meta name="description" content="Convert bank statement CSV files into a clean Xero bank import CSV. Inspect dates, debit/credit signs and every skipped row. Private, local and free."><title>StatementCheck — Bank CSV to Xero, with an audit trail</title>
+<style>
+:root{color-scheme:light;font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#182a37;background:#f3f6f8}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}a{color:#176995}header{background:#111f2b;color:#fff;padding:18px max(20px,calc((100vw - 1120px)/2));display:flex;justify-content:space-between;align-items:center;gap:16px}header strong{font-size:20px;letter-spacing:-.6px}header small{color:#8eabba}header a{color:#beddec}.tag{background:#163d43;color:#a7f0de;padding:5px 9px;border-radius:30px;font-size:12px;font-weight:700}main{max-width:1120px;margin:auto;padding:37px 20px 70px}.lead{max-width:810px;margin-bottom:26px}.lead h1{font-size:clamp(30px,4.7vw,47px);line-height:1.12;letter-spacing:-1.5px;margin:8px 0 13px}.lead p{color:#4d6373;margin:0;font-size:17px}.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#28706e;font-weight:900}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}.step{background:#e7eef1;border:1px solid #d6e0e5;padding:12px 14px;border-radius:12px;font-size:13px}.step b{color:#216d68;margin-right:7px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.panel{background:#fff;border:1px solid #dae5e9;box-shadow:0 5px 15px #11233409;border-radius:16px;padding:22px;min-width:0}.panel h2{font-size:19px;margin:0 0 8px;letter-spacing:-.5px}.muted{color:#617583;font-size:13px}.upload{border:2px dashed #a9bfca;background:#f7fafb;padding:24px;text-align:center;border-radius:12px;margin:16px 0}.upload.drag{border-color:#159e8a;background:#e9fbf5}.upload input{display:block;max-width:280px;margin:10px auto}.upload strong{display:block}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:13px}label{display:block;font-weight:700;font-size:12px;color:#354f60;margin-top:13px}label select,label input{display:block;width:100%;padding:9px 10px;margin-top:5px;border:1px solid #cbd9df;border-radius:8px;background:#fff;color:#203847}label select:focus,label input:focus{outline:2px solid #82c8b8}button.primary{border:0;background:#126e63;color:#fff;padding:11px 17px;border-radius:9px;font-weight:800}button.primary:disabled{opacity:.4;cursor:default}button.secondary{border:1px solid #cad8de;background:#fff;color:#204656;padding:10px 15px;border-radius:9px;font-weight:700}.buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}.status{background:#f3f7f9;border-radius:10px;padding:12px 14px;color:#496573;margin:16px 0;min-height:47px}.status.bad{color:#a43c35;background:#fff2ef}.status.good{color:#126d5c;background:#ecfbf5}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:17px}.stat{border:1px solid #deeaee;border-radius:10px;padding:12px;background:#fafcfd}.stat strong{font-size:23px;display:block}.stat small{font-size:11px;color:#6a7c86}.tablewrap{max-height:345px;overflow:auto;border:1px solid #d8e5eb;border-radius:9px;margin-top:14px}table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}th,td{padding:8px 10px;text-align:left;border-bottom:1px solid #e4edef}th{position:sticky;top:0;background:#f2f6f8}td:last-child{max-width:190px;overflow:hidden;text-overflow:ellipsis}details{border:1px solid #d7e4e8;border-radius:12px;margin-top:22px;padding:16px;background:#fff}details summary{font-weight:800;cursor:pointer}.fineprint{font-size:12px;color:#526879}.badge{display:inline-block;background:#edf5f7;color:#3b6472;border-radius:15px;padding:4px 9px;font-size:11px}.warning{color:#89462b;background:#fff5e8;border:1px solid #ffddb4;padding:12px;border-radius:9px;font-size:12px;margin-top:16px}#mapWrap{display:none}#proContent{display:none}#proUpsell{margin-top:18px;padding:14px;background:#f0f8f4;border:1px solid #c8e3d7;border-radius:10px}footer{text-align:center;padding:20px;color:#8297a4;font-size:12px;border-top:1px solid #e3eaed}@media(max-width:780px){.grid{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.row{grid-template-columns:1fr}main{padding-top:23px}.stats{grid-template-columns:repeat(3,1fr)}}
+</style></head><body>
+<header><div><strong>◈ StatementCheck</strong> <small> / bank file clinic</small></div><span class="tag">100% in your browser</span></header>
+<main><div class="lead"><div class="eyebrow">Free Xero CSV converter</div><h1>Your bank export has quirks.<br>Find them <em>before</em> your accounting import.</h1><p>Map messy bank CSV columns, normalize transaction signs and dates, and download an import-ready file with an explanation of every warning and rejected row. Your statements never leave your device.</p></div>
+<div class="steps"><div class="step"><b>01</b> Open your bank CSV</div><div class="step"><b>02</b> Review columns and sign rules</div><div class="step"><b>03</b> Inspect warnings and export</div></div>
+<div class="grid"><section class="panel"><h2>Import settings <span class="badge" id="edition">Free</span></h2><div class="muted">No account • No bank credentials • Files processed locally</div><div class="upload" id="drop"><strong>Choose a bank-exported CSV file</strong><div class="muted" id="fileHelp">UTF-8 or Windows-1252 CSV • up to 5 MB</div><input id="files" aria-label="Bank CSV file" type="file" accept=".csv,.txt,text/csv"></div>
+<label>Text encoding<select id="encoding"><option value="utf-8">UTF-8 (recommended)</option><option value="windows-1252">Windows-1252 / Latin text</option><option value="utf-16le">UTF-16 little endian</option></select></label>
+<label>CSV separator<select id="separator"><option value="auto">Auto-detect</option><option value=",">Comma</option><option value=";">Semicolon</option><option value="tab">Tab</option><option value="|">Pipe</option></select></label>
+<div id="mapWrap"><h2 style="margin-top:22px">Map your columns</h2><div class="muted">For signed amounts, map Amount. For separate expense/income columns, map Debit and Credit instead.</div><div class="row" id="mappings"></div>
+<div class="row"><label>Date order<select id="dateMode"><option value="dmy">Day / month / year (08/10/2026)</option><option value="mdy">Month / day / year (10/08/2026)</option></select></label><label>Number format<select id="decimal"><option value="auto">Auto (flag ambiguous amounts)</option><option value=".">Decimal dot · 1,234.56</option><option value=",">Decimal comma · 1.234,56</option><option value="none">Whole numbers only</option></select></label></div>
+<label><input type="checkbox" id="invert" style="width:auto;display:inline-block;margin-right:7px"> Reverse all debit/credit signs (only if needed)</label>
+<div class="buttons"><button class="primary" id="process">Validate and preview</button><button class="secondary" id="reset">Start over</button></div></div>
+<div id="proContent"><div class="buttons"><button class="secondary" id="saveRecipe">Save column mapping recipe</button><label style="margin:0;align-self:center"><input type="file" id="loadRecipe" accept=".json,application/json" style="max-width:190px;display:inline-block"></label></div><p class="muted">Portable JSON recipes make repeat imports easier. They contain mappings, not financial data.</p></div>
+<div id="proUpsell"><b>Need multiple statements every month?</b><div class="muted">The offline batch edition adds multi-file processing and portable mapping recipes. No cloud account or recurring bill. Purchase link will appear when the store opens.</div></div>
+</section><section class="panel"><h2>Validation report</h2><p class="muted">Nothing is silently discarded. Check transaction totals against your statement before importing into Xero.</p><div id="status" class="status" role="status">Choose a CSV file to begin. You can also load a synthetic example below.</div><button class="secondary" id="sample">Try example bank export</button>
+<div class="stats"><div class="stat"><strong id="sourceRows">0</strong><small>Input rows</small></div><div class="stat"><strong id="validRows">0</strong><small>Exportable</small></div><div class="stat"><strong id="errorRows">0</strong><small>Errors</small></div></div><p class="fineprint" id="total">Net amount: —</p>
+<div class="tablewrap"><table><thead><tr><th>Date</th><th>Amount</th><th>Payee</th><th>Reference</th></tr></thead><tbody id="preview"><tr><td colspan="4">No transactions loaded</td></tr></tbody></table></div>
+<h3 style="font-size:14px;margin-bottom:4px">Findings <span id="issuesCount" class="badge">0</span></h3><div class="tablewrap" style="max-height:150px"><table><thead><tr><th>Source / row</th><th>Severity</th><th>Finding</th></tr></thead><tbody id="issues"><tr><td colspan="3">No validation performed</td></tr></tbody></table></div>
+<div class="buttons"><button class="primary" id="download" disabled>Download Xero CSV</button><button class="secondary" id="audit" disabled>Download audit CSV</button></div><div class="warning"><b>Before importing:</b> This is a format converter, not bank/accounting verification. Check direction of payments, statement balances, potential duplicates already in Xero, and your locale. Your accounting system performs the final import validation. Do not use this tool with PDF statements.</div>
+</section></div>
+<details><summary>What does the converter change?</summary><p>Converts source dates to unambiguous ISO dates, normalizes amounts to signed two-decimal numbers, merges debit/credit columns when necessary, and maps optional payee, description and reference. It flags invalid dates, ambiguous amounts, malformed CSV and repeated records. Repeated records remain in the preview—review them before importing. The tool never contacts Xero or your bank.</p><p>Supported target fields are Date, Amount, Payee, Description, Reference. <a href="https://central.xero.com/0/article/Import-a-CSV-bank-statement" rel="noopener noreferrer" target="_blank">Read Xero's official bank CSV instructions.</a></p><p class="fineprint">This tool is independent from and not endorsed by Xero. It does not constitute accounting advice. Avoid opening an untrusted exported CSV in a spreadsheet without reviewing formula warnings.</p></details>
+</main><footer>StatementCheck · Browser-only, no telemetry · Your financial data stays on your device</footer>
+<script>
+/* StatementCheck — local-only CSV bank import preparation. MIT licensed demo engine. */
+(function(root,factory){const m=factory();if(typeof module==='object'&&module.exports)module.exports=m;root.StatementEngine=m;})(typeof globalThis!=='undefined'?globalThis:this,function(){
+'use strict';
+const DEFAULT_HEADERS=['Date','Amount','Payee','Description','Reference'];
+function parseCSV(text,separator=','){
+  const lines=[],errors=[];let row=[],field='',quoted=false,postQuote=false,line=1,rowStart=1;
+  text=String(text).replace(/^\uFEFF/,'');
+  for(let i=0;i<text.length;i++){
+    const c=text[i],next=text[i+1];
+    if(quoted){if(c==='"'&&next==='"'){field+='"';i++;}else if(c==='"'){quoted=false;postQuote=true;}else{field+=c;if(c==='\n')line++;}continue;}
+    if(postQuote){if(c===separator){row.push(field);field='';postQuote=false;continue;}if(c==='\n'||c==='\r'){row.push(field);lines.push({cells:row,line:rowStart});row=[];field='';postQuote=false;if(c==='\r'&&next==='\n')i++;line++;rowStart=line;continue;}if(c===' '||c==='\t')continue;errors.push({line,message:'Unexpected character after closing quote'});postQuote=false;}
+    if(c==='"'){if(field.trim()===''){field='';quoted=true;}else{errors.push({line,message:'Unexpected quote in unquoted value'});field+=c;}}
+    else if(c===separator){row.push(field);field='';}
+    else if(c==='\n'||c==='\r'){row.push(field);lines.push({cells:row,line:rowStart});row=[];field='';if(c==='\r'&&next==='\n')i++;line++;rowStart=line;}
+    else field+=c;
+  }
+  if(quoted)errors.push({line:rowStart,message:'Unclosed quote'});
+  if(field.length||row.length||postQuote){row.push(field);lines.push({cells:row,line:rowStart});}
+  return {rows:lines,errors};
+}
+function detectDelimiter(text){const samples=[',',';','\t','|'].map(sep=>{const r=parseCSV(text.slice(0,30000),sep);const nonempty=r.rows.filter(x=>x.cells.some(s=>s.trim())).slice(0,25);const widths=nonempty.map(x=>x.cells.length);const multi=widths.filter(n=>n>1).length;const mode=Math.max(...widths,0);return {sep,score:multi*10+mode-r.errors.length*15-(new Set(widths).size-1)*8};});samples.sort((a,b)=>b.score-a.score);return samples[0].sep;}
+function parseAmount(input,decimal='auto'){
+  let s=String(input??'').trim().replace(/[\s\u00a0]/g,'').replace(/[$€£¥₡₹]/g,'').replace(/[A-Za-z]{3}(?=\d)/g,'');
+  if(!s)return {error:'Missing amount'};
+  let negative=false;if(/^\(.*\)$/.test(s)){negative=true;s=s.slice(1,-1);}if(s[0]==='-'){negative=!negative;s=s.slice(1);}if(s[0]==='+')s=s.slice(1);if(s.endsWith('-')){negative=!negative;s=s.slice(0,-1);}
+  if(!/^[0-9.,]+$/.test(s))return {error:'Invalid amount'};
+  let chosen=decimal;
+  if(chosen==='auto'){
+    const dot=s.lastIndexOf('.'),comma=s.lastIndexOf(',');
+    if(dot>=0&&comma>=0)chosen=dot>comma?'.':',';
+    else if(dot>=0||comma>=0){const sep=dot>=0?'.':',';const pieces=s.split(sep);if(pieces.length===2&&pieces[1].length===3&&pieces[0].length<=3) return {error:'Ambiguous decimal/thousands separator — choose a locale explicitly'};chosen=pieces.length>2||pieces[1]?.length===3?'none':sep;}
+    else chosen='none';
+  }
+  if(chosen==='none'){
+    if(/[.,]/.test(s))return {error:'Unexpected separator in whole-number mode'};
+    return {cents:(negative?-1:1)*Number(s)*100};
+  }
+  const group=chosen==='.'?',':'.';
+  const normalized=s.replaceAll(group,'');
+  const parts=normalized.split(chosen);
+  if(parts.length>2||!parts.every(p=>/^\d*$/.test(p))||parts[0]==='')return {error:'Invalid decimal format'};
+  if(parts[1]&&parts[1].length>2)return {error:'More than two decimal places'};
+  const cents=Number(parts[0])*100+Number((parts[1]||'').padEnd(2,'0'));
+  if(!Number.isSafeInteger(cents))return {error:'Amount exceeds safe numeric range'};
+  return {cents:(negative?-1:1)*cents};
+}
+function parseDate(input,mode='dmy'){
+  const s=String(input??'').trim();let y,m,d;
+  let k=s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/);
+  if(k){[,y,m,d]=k;}
+  else {k=s.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$/);if(!k)return {error:'Use a date such as 2026-10-08 or 08/10/2026'};
+    if(mode==='mdy'){[,m,d,y]=k;}else{[,d,m,y]=k;}}
+  const Y=Number(y),M=Number(m),D=Number(d);const dt=new Date(Date.UTC(Y,M-1,D));
+  if(dt.getUTCFullYear()!==Y||dt.getUTCMonth()+1!==M||dt.getUTCDate()!==D||Y<1900||Y>2100)return {error:'Invalid date'};
+  return {iso:[y.padStart(4,'0'),String(M).padStart(2,'0'),String(D).padStart(2,'0')].join('-')};
+}
+function detectColumns(headers){const norm=x=>String(x).toLowerCase().replace(/[^a-z0-9]/g,'');const h=headers.map(norm);const find=arr=>h.findIndex(v=>arr.includes(v));return {date:find(['date','transactiondate','postingdate','valuedate','fecha','fechamovimiento']),amount:find(['amount','netamount','transactionamount','importe','monto']),debit:find(['debit','withdrawal','withdrawals','moneyout','spent','cargo','egreso','salida']),credit:find(['credit','deposit','deposits','moneyin','received','abono','ingreso','entrada']),payee:find(['payee','merchant','beneficiary','beneficiario','comercio','destinatario']),description:find(['description','details','memo','narrative','concepto','descripcion','detalle','glosa']),reference:find(['reference','ref','transactionid','idtransaccion','referencia'])};}
+function build(rows,opts={}){
+  const map=opts.map||{};const decimal=opts.decimal||'auto',dateMode=opts.dateMode||'dmy',invert=opts.invert===true;const outputs=[],issues=[],seen=new Map();let totalCents=0,sourceRows=0;
+  for(const item of rows){const v=item.cells||item;const source=item.source||'input.csv';const line=item.line??0;if(!v.some(x=>String(x).trim()))continue;sourceRows++;
+    const val=k=>map[k]>=0?String(v[map[k]]??'').trim():'';
+    const issue=(message,severity='error')=>issues.push({source,line,severity,message});
+    const parsedDate=parseDate(val('date'),dateMode);if(parsedDate.error){issue('Date: '+parsedDate.error);continue;}
+    let parsedAmount;
+    if(map.amount>=0){parsedAmount=parseAmount(val('amount'),decimal);}
+    else {const debit=val('debit'),credit=val('credit');if(debit&&credit){issue('Both debit and credit amounts are populated');continue;}
+      if(!debit&&!credit){issue('Missing debit/credit amount');continue;}
+      parsedAmount=parseAmount(debit||credit,decimal);
+      if(!parsedAmount.error)parsedAmount.cents=(debit?-1:1)*Math.abs(parsedAmount.cents);
+    }
+    if(parsedAmount.error){issue('Amount: '+parsedAmount.error);continue;}
+    const cents=parsedAmount.cents*(invert?-1:1);if(!Number.isSafeInteger(cents)){issue('Amount too large');continue;}
+    const payee=val('payee'),description=val('description'),reference=val('reference');
+    for(const value of [payee,description,reference])if(/^[=+@\t\r]/.test(value))issue('Unsafe spreadsheet formula-like text field. Edit the source before exporting','error');
+    const key=JSON.stringify([parsedDate.iso,cents,payee,description,reference]);if(seen.has(key))issue('Exact duplicate of '+seen.get(key)+' — review before import','warning');else seen.set(key,source+':'+line);
+    outputs.push({source,line,date:parsedDate.iso,cents,payee,description,reference});totalCents+=cents;
+  }
+  return {outputs,issues,sourceRows,totalCents};
+}
+function escapeCSV(value){const s=String(value??'');return /[",\n\r]/.test(s)?'"'+s.replaceAll('"','""')+'"':s;}
+function toCSV(records){return records.map(r=>r.map(escapeCSV).join(',')).join('\r\n')+'\r\n';}
+function toXero(result){return toCSV([DEFAULT_HEADERS,...result.outputs.map(x=>[x.date,(x.cents/100).toFixed(2),x.payee,x.description,x.reference])]);}
+function toAudit(result){return toCSV([['Source','Input line','Severity','Finding'],...result.issues.map(x=>[x.source,x.line,x.severity,x.message])]);}
+return {parseCSV,detectDelimiter,parseAmount,parseDate,detectColumns,build,toXero,toAudit};
+});
+
+</script><script>
+(()=>{'use strict';const E=window.StatementEngine,pro=window.STATEMENT_PRO===true;const $=id=>document.getElementById(id);let rawFiles=[],parsed=[],result=null,headers=[],loaded=false;
+const text=(id,v)=>{$(id).textContent=String(v)};const setStatus=(msg,type='')=>{text('status',msg);$('status').className='status '+type};const csvBlob=(contents,filename)=>{const blob=new Blob(['\ufeff',contents],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)};
+function escape(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function fillMappings(names){headers=names;const fields=[['date','Date *'],['amount','Amount (signed)'],['debit','Debit / expenses'],['credit','Credit / income'],['payee','Payee'],['description','Description'],['reference','Reference']];const guessed=E.detectColumns(names);$('mappings').innerHTML=fields.map(([name,label])=>`<label>${label}<select id="map_${name}"><option value="-1">— Not mapped —</option>${names.map((n,i)=>`<option value="${i}" ${guessed[name]===i?'selected':''}>${escape(n||'(blank header)')}</option>`).join('')}</select></label>`).join('');$('mapWrap').style.display='block';}
+function mapNow(){const out={};for(const k of ['date','amount','debit','credit','payee','description','reference'])out[k]=Number($('map_'+k).value);return out;}
+function parseCurrent(){if(!rawFiles.length)return;parsed=[];let errors=[];for(const file of rawFiles){const sep=$('separator').value==='auto'?E.detectDelimiter(file.content):$('separator').value==='tab'?'\t':$('separator').value;const r=E.parseCSV(file.content,sep);errors.push(...r.errors.map(e=>`${file.name} line ${e.line}: ${e.message}`));const nonempty=r.rows.filter(x=>x.cells.some(c=>c.trim()));if(!nonempty.length){errors.push(file.name+': empty CSV');continue;}
+const fileHeaders=nonempty[0].cells;const body=nonempty.slice(1);if(parsed.length===0){fillMappings(fileHeaders);}else if(JSON.stringify(fileHeaders)!==JSON.stringify(headers)){errors.push(file.name+': headers differ from the first file — batch files must use the same columns');continue;}
+const expected=fileHeaders.length;for(const item of body){if(item.cells.length!==expected){errors.push(`${file.name} line ${item.line}: expected ${expected} cells, found ${item.cells.length}`);continue;}parsed.push({...item,source:file.name});}}
+loaded=errors.length===0;if(errors.length){setStatus('CSV structure needs attention: '+errors.slice(0,3).join(' | '),'bad');$('process').disabled=true;}else{setStatus(`Loaded ${parsed.length} data rows from ${rawFiles.length} file(s). Review mappings and press Validate.`,'good');$('process').disabled=false;}
+result=null;refresh();}
+async function loadFiles(files){const max=pro?20:1;if(files.length>max){setStatus(pro?`Choose up to ${max} files per batch.`:'Free edition accepts one CSV at a time.','bad');return;}
+try{rawFiles=[];for(const file of files){if(file.size>5*1024*1024)throw Error('File too large: '+file.name);const buf=await file.arrayBuffer();const decoder=new TextDecoder($('encoding').value,{fatal:true});rawFiles.push({name:file.name,content:decoder.decode(buf)});}parseCurrent();}catch(e){setStatus('Cannot open file: '+e.message,'bad');}}
+function refresh(){if(!result){for(const id of ['sourceRows','validRows','errorRows'])text(id,0);text('total','Net amount: —');text('issuesCount',0);$('preview').innerHTML='<tr><td colspan="4">No validated transactions yet</td></tr>';$('issues').innerHTML='<tr><td colspan="3">No validation performed</td></tr>';$('download').disabled=true;$('audit').disabled=true;return;}
+text('sourceRows',result.sourceRows);text('validRows',result.outputs.length);text('errorRows',result.issues.filter(x=>x.severity==='error').length);text('total','Net amount: '+(result.totalCents/100).toFixed(2)+' (source currency; compare against bank totals)');text('issuesCount',result.issues.length);
+$('preview').innerHTML=result.outputs.slice(0,40).map(x=>`<tr><td>${escape(x.date)}</td><td>${(x.cents/100).toFixed(2)}</td><td>${escape(x.payee)}</td><td>${escape(x.reference)}</td></tr>`).join('')||'<tr><td colspan="4">No exportable transactions</td></tr>';
+$('issues').innerHTML=result.issues.slice(0,100).map(x=>`<tr><td>${escape(x.source)}:${x.line}</td><td>${escape(x.severity)}</td><td title="${escape(x.message)}">${escape(x.message)}</td></tr>`).join('')||'<tr><td colspan="3">No issues found</td></tr>';
+$('download').disabled=result.outputs.length===0||result.issues.some(x=>x.severity==='error');$('audit').disabled=result.issues.length===0;
+const errors=result.issues.filter(x=>x.severity==='error').length;setStatus(errors?`Found ${errors} blocking error(s). Correct your source CSV or mapping before downloading.`:`Validated ${result.outputs.length} transactions. ${result.issues.length} warning(s) to review. Confirm amount signs before exporting.`,errors?'bad':'good');}
+$('files').multiple=pro;$('edition').textContent=pro?'Batch edition':'Free';$('fileHelp').textContent=pro?'Up to 20 CSV files per batch • 5 MB each':'One CSV • up to 5 MB';$('proContent').style.display=pro?'block':'none';$('proUpsell').style.display=pro?'none':'block';
+$('files').addEventListener('change',e=>loadFiles([...e.target.files]));for(const id of ['encoding','separator'])$(id).addEventListener('change',()=>{if(rawFiles.length){if(id==='encoding')(result=null,loaded=false,refresh(),setStatus('Select the file again to change character encoding.','bad'));else parseCurrent();}});
+$('process').addEventListener('click',()=>{if(!loaded){setStatus('Resolve structural CSV problems first.','bad');return;}const map=mapNow();if(map.date<0||((map.amount<0)&&(map.debit<0||map.credit<0))){setStatus('Map Date and either Amount, or BOTH Debit and Credit.','bad');return;}
+if(map.amount>=0&&(map.debit>=0||map.credit>=0)){setStatus('Use signed Amount OR split Debit/Credit columns, not both.','bad');return;}
+result=E.build(parsed,{map,dateMode:$('dateMode').value,decimal:$('decimal').value,invert:$('invert').checked});refresh();});
+$('download').addEventListener('click',()=>{if(result&&!$('download').disabled)csvBlob(E.toXero(result),'xero-bank-import.csv');});$('audit').addEventListener('click',()=>{if(result)csvBlob(E.toAudit(result),'statementcheck-audit.csv');});
+$('sample').addEventListener('click',()=>{rawFiles=[{name:'sample-synthetic.csv',content:'Date;Debit;Credit;Description;Reference\n08/10/2026;12,50;;Coffee shop;R001\n09/10/2026;;1025,00;Client payment;R002\n10/10/2026;7,20;;Office supplies;R003\n'}];$('separator').value='auto';$('decimal').value=',';$('dateMode').value='dmy';parseCurrent();});
+$('reset').addEventListener('click',()=>{rawFiles=[];parsed=[];loaded=false;result=null;$('files').value='';$('mapWrap').style.display='none';setStatus('Ready for a new CSV file.');refresh();});
+const drop=$('drop');['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag')}));['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('drag')}));drop.addEventListener('drop',e=>loadFiles([...e.dataTransfer.files]));
+if(pro){$('saveRecipe').onclick=()=>{if(!loaded)return setStatus('Load and map a CSV file first.','bad');const recipe={version:1,headers,map:mapNow(),dateMode:$('dateMode').value,decimal:$('decimal').value,invert:$('invert').checked};const a=document.createElement('a');const url=URL.createObjectURL(new Blob([JSON.stringify(recipe,null,2)],{type:'application/json'}));a.href=url;a.download='statementcheck-mapping.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1200)};
+$('loadRecipe').onchange=async e=>{try{const recipe=JSON.parse(await e.target.files[0].text());if(!loaded||recipe.version!==1||JSON.stringify(headers)!==JSON.stringify(recipe.headers))throw Error('Load a CSV with exactly the same headers before applying its recipe');for(const [k,v]of Object.entries(recipe.map)){if(!$('map_'+k)||!Number.isInteger(v)||v>=headers.length||v< -1)throw Error('Invalid recipe mapping');$('map_'+k).value=v;}$('dateMode').value=recipe.dateMode;$('decimal').value=recipe.decimal;$('invert').checked=recipe.invert===true;setStatus('Recipe loaded. Validate before exporting.','good');}catch(err){setStatus('Could not apply recipe: '+err.message,'bad');}};}
+})();
+
+</script></body></html>
