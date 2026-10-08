@@ -48,7 +48,7 @@ function detectDelimiter(text){const samples=[',',';','\t','|'].map(sep=>{const 
 function parseAmount(input,decimal='auto'){
   let s=String(input??'').trim().replace(/[\s\u00a0]/g,'').replace(/[$€£¥₡₹]/g,'').replace(/[A-Za-z]{3}(?=\d)/g,'');
   if(!s)return {error:'Missing amount'};
-  let negative=false;if(/^\(.*\)$/.test(s)){negative=true;s=s.slice(1,-1);}if(s[0]==='-'){negative=!negative;s=s.slice(1);}if(s[0]==='+')s=s.slice(1);if(s.endsWith('-')){negative=!negative;s=s.slice(0,-1);}
+  let negative=false,signCount=0;if(/^\(.*\)$/.test(s)){negative=true;signCount++;s=s.slice(1,-1);}if(s[0]==='-'){negative=true;signCount++;s=s.slice(1);}if(s[0]==='+'){signCount++;s=s.slice(1);}if(s.endsWith('-')){negative=true;signCount++;s=s.slice(0,-1);}if(signCount>1)return {error:'Conflicting amount signs'};
   if(!/^[0-9.,]+$/.test(s))return {error:'Invalid amount'};
   let chosen=decimal;
   if(chosen==='auto'){
