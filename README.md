@@ -14,3 +14,11 @@ assets/fonts/*.woff2       JetBrains Mono (latin, latin-ext)
 ```
 
 Edit `index.html` and push; GitHub Pages serves `main` at the root.
+
+## CrowPSX
+
+- [Product website](https://luci0n.github.io/crowpsx/)
+- [Documentation](https://luci0n.github.io/crowpsx/docs/)
+- [Unity PSX shader comparison](https://luci0n.github.io/crowpsx/guides/psx-shaders-unity-comparison/)
+
+The root sitemap includes the CrowPSX product, guides, and documentation pages.
