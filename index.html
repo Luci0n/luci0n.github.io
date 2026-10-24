@@ -3,10 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>luci0n</title>
-<meta name="description" content="Small, hand-written software by Luci0n, kept simple enough to read end to end.">
-<meta name="color-scheme" content="dark">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a0b0d'/%3E%3Crect x='4' y='4' width='8' height='8' fill='%23d8443f'/%3E%3C/svg%3E">
+<title>Joshua / luci0n · rendering, tools and the web</title>
+<meta name="description" content="Joshua (luci0n) builds Unity shaders and post-processing, a GPU flash filter for Windows, and small static web tools. Projects, source and contact.">
+<link rel="canonical" href="https://luci0n.github.io/">
+<meta property="og:title" content="Joshua / luci0n">
+<meta property="og:description" content="Unity rendering, a GPU flash filter for Windows, and small web tools that need no build step.">
+<meta property="og:image" content="https://luci0n.github.io/assets/crowpsx.webp">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23171512'/%3E%3Crect x='4' y='4' width='8' height='8' fill='%23c8402f'/%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 @font-face{
   font-family:'JetBrains Mono';
@@ -26,277 +31,434 @@
 }
 
 :root{
-  --ac:#d8443f;
-  --bg:#0a0b0d;
-  --panel:#101217;
-  --line:#23262c;
-  --line-soft:#1b1e23;
-  --fg:#e2e5e9;
-  --dim:#9aa3ae;
-  --dimmer:#6f7883;
-  --faint:#414750;
-  --link:#6fd3e4;
+  --paper:#f2eee6;
+  --paper-2:#e9e3d8;
+  --ink:#191714;
+  --ink-2:#4a453d;
+  --ink-3:#7a7366;
+  --rule:#d3cbbd;
+  --rule-soft:#e0d9cc;
+  --red:#c8402f;
+  --link:#1f5f8b;
+  --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,"Source Serif Pro",Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#141311;
+    --paper-2:#1c1a17;
+    --ink:#ece6da;
+    --ink-2:#bdb5a6;
+    --ink-3:#8a8273;
+    --rule:#34302a;
+    --rule-soft:#262320;
+    --red:#e2583f;
+    --link:#7fb6dc;
+  }
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{
   margin:0;
-  background:var(--bg);
-  color:var(--fg);
-  font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  font-size:15px;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:17px;
   line-height:1.6;
-  padding:0 clamp(20px,5vw,40px);
+  padding:0 clamp(16px,4vw,40px);
 }
-.wrap{max-width:900px;margin:0 auto}
-a{color:inherit}
-a:focus-visible,button:focus-visible{outline:1px solid var(--link);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto}
+a{color:var(--link);text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+img{max-width:100%;display:block}
+.mono{font-family:var(--mono)}
+.label{
+  font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--ink-3);
+}
 
-/* header */
-header{
-  padding:clamp(56px,10vw,104px) 0 clamp(40px,7vw,72px);
-  display:flex;flex-direction:column;gap:22px;
+/* top bar */
+.top{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+  padding:22px 0;border-bottom:1px solid var(--rule);
+  font-family:var(--mono);font-size:13px;
 }
-.mark{display:flex;align-items:baseline;gap:2px}
-.mark h1{
-  margin:0;
-  font-size:clamp(40px,9vw,76px);
-  font-weight:700;
-  letter-spacing:-.04em;
-  line-height:1;
-}
-.blink{
-  width:clamp(10px,2.2vw,18px);height:clamp(10px,2.2vw,18px);
-  background:var(--ac);display:inline-block;margin-left:6px;
-  animation:blink 1.2s steps(1,end) infinite;
-}
-@keyframes blink{50%{opacity:0}}
-@media (prefers-reduced-motion:reduce){.blink{animation:none}}
-.intro{margin:0;color:var(--dim);font-size:clamp(14px,1.6vw,17px);max-width:56ch;text-wrap:pretty}
-.chips{
-  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
-  font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--dimmer);
-}
-.chip{border:1px solid var(--line);padding:5px 10px;display:flex;align-items:center;gap:8px}
-.dot{width:6px;height:6px;border-radius:50%;background:#4fbf7a;display:inline-block}
-a.chip{text-decoration:none;color:var(--link);transition:border-color .15s}
-a.chip:hover{border-color:var(--link)}
+.handle{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font-weight:700}
+.handle i{width:10px;height:10px;background:var(--red);display:inline-block}
+.top nav{display:flex;gap:20px;flex-wrap:wrap}
+.top nav a{color:var(--ink-2);text-decoration:none}
+.top nav a:hover{color:var(--ink);text-decoration:underline}
 
-/* sections */
-section{border-top:1px solid var(--line)}
-.sec-head{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:16px;flex-wrap:wrap;padding:18px 0;
+/* intro */
+.intro{
+  display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:clamp(32px,6vw,80px);
+  padding:clamp(48px,9vw,110px) 0 clamp(40px,6vw,72px);
+  align-items:end;
 }
+.intro h1{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(34px,5.4vw,60px);line-height:1.08;letter-spacing:-.015em;
+  margin:0 0 28px;max-width:19ch;text-wrap:balance;
+}
+.kicker{font-family:var(--mono);font-size:13px;color:var(--red);margin:0 0 18px!important}
+.intro p{margin:0 0 14px;color:var(--ink-2);max-width:58ch;text-wrap:pretty}
+.facts{
+  margin:0;padding:18px 0 0;border-top:2px solid var(--ink);
+  font-family:var(--mono);font-size:13px;line-height:1.5;
+}
+.facts div{display:grid;grid-template-columns:84px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid var(--rule)}
+.facts dt{color:var(--ink-3)}
+.facts dd{margin:0}
+.status{display:inline-flex;align-items:center;gap:8px}
+.status::before{content:"";width:7px;height:7px;border-radius:50%;background:#3f9a5a}
+
+/* section heads */
+.sec{padding:clamp(40px,6vw,72px) 0;border-top:1px solid var(--rule)}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:clamp(28px,4vw,44px)}
 .sec-head h2{
-  margin:0;font-size:12px;font-weight:500;color:var(--dimmer);
-  letter-spacing:.14em;text-transform:uppercase;
+  font-family:var(--serif);font-weight:400;font-size:clamp(26px,3vw,34px);margin:0;letter-spacing:-.01em;
 }
-.count{font-size:12px;color:var(--faint)}
-#pages{padding-bottom:clamp(40px,6vw,64px)}
-#repos{padding-bottom:clamp(40px,6vw,64px)}
+.sec-head .label{max-width:46ch}
 
-/* page cards */
-.cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-.card{
-  display:flex;flex-direction:column;
-  background:var(--panel);border:1px solid var(--line);
-  text-decoration:none;color:inherit;
-  transition:border-color .15s,transform .15s;
+/* project entries */
+.proj{
+  display:grid;grid-template-columns:120px minmax(0,1fr);gap:clamp(16px,3vw,40px);
+  padding:clamp(28px,4vw,44px) 0;border-top:1px solid var(--rule-soft);
 }
-.card:hover,.card:focus-visible{border-color:#3a3f48;transform:translateY(-2px)}
-.card .shot{height:150px;border-bottom:1px solid var(--line);overflow:hidden}
-.card .shot img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
-.card .body{padding:18px;display:flex;flex-direction:column;gap:8px;flex:1}
-.card .title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.card .title b{font-weight:700;font-size:17px}
-.card .kind{font-size:11px;color:var(--ac);letter-spacing:.08em}
-.card p{margin:0;color:var(--dim);font-size:13px;flex:1;text-wrap:pretty}
-.card .url{font-size:12px;color:var(--link);margin-top:8px}
+.proj:first-of-type{border-top:0;padding-top:0}
+.proj-side{font-family:var(--mono);font-size:12px;color:var(--ink-3);line-height:1.7}
+.proj-side .num{font-size:28px;color:var(--ink);font-family:var(--serif);line-height:1;display:block;margin-bottom:10px}
+.proj h3{font-family:var(--serif);font-weight:400;font-size:clamp(24px,2.6vw,30px);margin:0 0 6px;letter-spacing:-.01em}
+.proj .kind{font-family:var(--mono);font-size:12px;color:var(--red);margin:0 0 16px}
+.proj p{margin:0 0 14px;color:var(--ink-2);max-width:62ch;text-wrap:pretty}
+.proj .links{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--mono);font-size:13px;margin-top:6px}
+.proj figure{margin:0 0 22px;border:1px solid var(--rule);background:var(--paper-2)}
+.proj figure img{width:100%;height:auto}
+.proj figcaption{font-family:var(--mono);font-size:11px;color:var(--ink-3);padding:8px 12px;border-top:1px solid var(--rule)}
 
-/* filters */
+.split{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(20px,3vw,36px);align-items:start}
+.split figure{margin:0}
+
+/* numbers block */
+.readout{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  border:1px solid var(--rule);margin:4px 0 20px;max-width:640px;
+}
+.readout div{padding:14px 16px;border-right:1px solid var(--rule)}
+.readout div:last-child{border-right:0}
+.readout b{display:block;font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.1;color:var(--ink)}
+.readout span{font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:1.4;display:block;margin-top:6px}
+
+/* CrowFX looks, approximated in CSS so the page needs no extra images */
+.looks{list-style:none;margin:0 0 22px;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.looks li{
+  position:relative;height:110px;border:1px solid var(--rule);overflow:hidden;
+  background:linear-gradient(180deg,#26324a 0%,#5a6b7d 46%,#c9a27a 47%,#7d5a3f 100%);
+}
+.looks li::after{content:"";position:absolute;inset:0}
+.looks span{
+  position:absolute;left:0;bottom:0;z-index:1;
+  font-family:var(--mono);font-size:11px;color:#f2eee6;background:rgba(20,18,16,.72);padding:3px 7px;
+}
+.lk-crt::after{background:repeating-linear-gradient(180deg,rgba(0,0,0,.45) 0 1px,transparent 1px 3px)}
+.lk-dither::after{background-image:radial-gradient(rgba(0,0,0,.5) 1px,transparent 1.3px);background-size:3px 3px}
+.lk-poster{background:linear-gradient(180deg,#26324a 0 16%,#3d4c63 16% 31%,#5a6b7d 31% 46%,#c9a27a 46% 62%,#a37d58 62% 80%,#7d5a3f 80%)!important}
+.lk-bleed::after{background:linear-gradient(180deg,transparent 44%,rgba(214,60,60,.55) 45%,transparent 49%),linear-gradient(90deg,rgba(60,120,220,.25),transparent 30%,transparent 70%,rgba(220,60,60,.25))}
+
+/* small pair */
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(20px,3vw,36px)}
+.pair{padding-top:clamp(28px,4vw,44px);border-top:1px solid var(--rule-soft)}
+.pair .proj{grid-template-columns:1fr;gap:0;border-top:0;padding:0}
+.pair .proj-side{display:flex;gap:12px;align-items:baseline;margin-bottom:14px}
+.pair .proj-side .num{font-size:22px;margin:0}
+
+/* index table */
 .filters{display:flex;gap:6px;flex-wrap:wrap}
 .filters button{
-  background:transparent;font:inherit;font-size:11px;letter-spacing:.08em;
-  text-transform:lowercase;padding:5px 9px;cursor:pointer;
-  border:1px solid var(--line);color:var(--dimmer);
-  transition:border-color .12s,color .12s;
+  font:inherit;font-family:var(--mono);font-size:12px;
+  background:transparent;color:var(--ink-2);
+  border:1px solid var(--rule);padding:5px 10px;cursor:pointer;border-radius:2px;
 }
-.filters button:hover{border-color:#4a5059;color:var(--fg)}
-.filters button[aria-pressed="true"]{border-color:var(--ac);color:var(--fg)}
+.filters button:hover{border-color:var(--ink-3);color:var(--ink)}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+table.index{width:100%;border-collapse:collapse;font-size:15px}
+.index th{
+  text-align:left;font-family:var(--mono);font-weight:400;font-size:12px;color:var(--ink-3);
+  padding:0 12px 10px 0;border-bottom:2px solid var(--ink);
+}
+.index td{padding:14px 12px 14px 0;border-bottom:1px solid var(--rule);vertical-align:baseline}
+.index tr[hidden]{display:none}
+.index td:first-child{white-space:nowrap}
+.index td:first-child a{font-weight:600;color:var(--ink);text-decoration:none}
+.index td:first-child a:hover{color:var(--red)}
+.index .what{color:var(--ink-2)}
+.index .lng,.index .yr{font-family:var(--mono);font-size:12px;color:var(--ink-3);white-space:nowrap}
+.index .fork{font-family:var(--mono);font-size:11px;color:var(--ink-3);border:1px solid var(--rule);padding:0 5px;margin-left:6px;font-weight:400}
 
-/* repo list */
-ul.repos{list-style:none;margin:0;padding:0;border-top:1px solid var(--line-soft)}
-ul.repos li{border-bottom:1px solid var(--line-soft)}
-ul.repos li[hidden]{display:none}
-ul.repos a{
-  display:grid;grid-template-columns:auto 1fr auto;gap:6px 16px;align-items:baseline;
-  padding:16px 10px;text-decoration:none;color:inherit;transition:background .12s;
+/* about */
+.about{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:clamp(28px,5vw,64px)}
+.about p{margin:0 0 16px;color:var(--ink-2);max-width:60ch;text-wrap:pretty}
+.about p:first-child{font-family:var(--serif);font-size:22px;line-height:1.45;color:var(--ink)}
+.kit{margin:0}
+.kit div{padding:12px 0;border-bottom:1px solid var(--rule)}
+.kit div:first-child{border-top:2px solid var(--ink)}
+.kit dt{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin-bottom:4px}
+.kit dd{margin:0;font-size:15px}
+
+/* contact */
+.contact{padding:clamp(48px,8vw,96px) 0;border-top:1px solid var(--rule)}
+.contact h2{
+  font-family:var(--serif);font-weight:400;font-size:clamp(30px,4.4vw,48px);line-height:1.1;
+  margin:0 0 20px;max-width:20ch;letter-spacing:-.015em;
 }
-ul.repos a:hover,ul.repos a:focus-visible{background:var(--panel)}
-.n{font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums;padding-top:2px}
-.meta{display:flex;flex-direction:column;gap:4px;min-width:0}
-.name-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.name-row b{font-weight:700;font-size:16px}
-.lang{font-size:11px;letter-spacing:.08em;color:var(--dimmer);border:1px solid var(--line);padding:1px 6px}
-.meta p{margin:0;color:var(--dim);font-size:13px;text-wrap:pretty}
-.arrow{color:var(--ac);font-size:13px}
+.contact p{color:var(--ink-2);max-width:56ch;margin:0 0 26px}
+.contact ul{list-style:none;margin:0;padding:0;font-family:var(--mono);font-size:14px;display:flex;flex-direction:column;gap:10px}
 
 footer{
-  border-top:1px solid var(--line);
-  padding:20px 0 48px;
-  display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;
-  color:var(--dimmer);font-size:12px;
+  border-top:1px solid var(--rule);padding:20px 0 40px;
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:12px;color:var(--ink-3);
 }
-footer p{margin:0;letter-spacing:.06em}
-footer a{color:inherit;text-decoration:none;border-bottom:1px solid var(--line)}
-footer a:hover{color:var(--fg);border-bottom-color:var(--dimmer)}
+footer a{color:inherit}
+
+@media (max-width:820px){
+  .intro{grid-template-columns:1fr;align-items:start}
+  .proj{grid-template-columns:1fr;gap:12px}
+  .proj-side{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+  .proj-side .num{font-size:22px;margin:0}
+  .split,.pair,.about{grid-template-columns:1fr}
+  .pair{gap:40px}
+  .index .lng,.index th.lng{display:none}
+}
+@media (max-width:560px){
+  body{font-size:16px}
+  .readout{grid-template-columns:1fr}
+  .looks{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .readout div{border-right:0;border-bottom:1px solid var(--rule)}
+  .readout div:last-child{border-bottom:0}
+  .index .yr,.index th.yr{display:none}
+  .index td:first-child{white-space:normal}
+  .index tr{display:block;padding:12px 0;border-bottom:1px solid var(--rule)}
+  .index td{display:block;border:0;padding:0}
+  .index thead{display:none}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <header>
-    <div class="mark">
-      <h1>luci0n</h1>
-      <span class="blink" aria-hidden="true"></span>
-    </div>
-    <p class="intro">Small, hand-written software, kept simple enough to read end to end.</p>
-    <div class="chips">
-      <span class="chip"><span class="dot" aria-hidden="true"></span>crowq3 server up</span>
-      <span class="chip">html &middot; c# &middot; c++ &middot; ts</span>
-      <a class="chip" href="https://github.com/Luci0n">github.com/luci0n &rarr;</a>
-    </div>
+  <header class="top">
+    <a class="handle" href="./"><i aria-hidden="true"></i>luci0n</a>
+    <nav aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#index">All projects</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
   </header>
 
-  <section id="pages">
-    <div class="sec-head">
-      <h2>Live pages</h2>
-      <span class="count">03</span>
+  <section class="intro">
+    <div>
+      <p class="kicker">Joshua, on GitHub as luci0n</p>
+      <h1>I make Unity look like 1997 on purpose, and Windows flash a little less.</h1>
+      <p>Most of my work lives inside Unity. There's a shader suite I sell on the Asset Store, a free post-processing package with 88 looks, and a save system built so that scene travel never shuffles state around. Outside the engine I wrote a Direct3D overlay that damps hazardous flashing, plus a few websites that ship as plain files.</p>
+      <p>I'm looking for a full-time role on a team that ships graphics, tools or web software. Everything below links to working code.</p>
     </div>
-    <div class="cards">
-      <a class="card" href="https://luci0n.github.io/crowpsx/">
-        <div class="shot"><img src="assets/crowpsx.webp" alt="CrowPSX PSX shaders in Unity: a textured, moonlit street with retro lighting." width="1895" height="868" loading="lazy" decoding="async"></div>
-        <div class="body">
-          <div class="title"><b>CrowPSX</b><span class="kind">UNITY SHADERS</span></div>
-          <p>PSX-inspired shaders for Unity Built-in and URP. Vertex snapping, affine texture warping, terrain, foliage, particles, and material tools.</p>
-          <span class="url">luci0n.github.io/crowpsx/</span>
-        </div>
-      </a>
-
-      <a class="card" href="https://luci0n.github.io/crowq3/">
-        <div class="shot"><img src="assets/crowq3.webp" alt="The crowq3 join page: Crow's Quake III Arena, with a download button and setup instructions." width="742" height="524" loading="lazy" decoding="async"></div>
-        <div class="body">
-          <div class="title"><b>crowq3</b><span class="kind">QUAKE III</span></div>
-          <p>Server join page and developer reference, with live map, player and score readouts.</p>
-          <span class="url">luci0n.github.io/crowq3/</span>
-        </div>
-      </a>
-      <a class="card" href="https://luci0n.github.io/CrowStudies/">
-        <div class="shot"><img src="assets/crowstudies.webp" alt="The CrowStudies home page: Learn it. Build with it., with Lessons and Studio panels." width="742" height="460" loading="lazy" decoding="async"></div>
-        <div class="body">
-          <div class="title"><b>CrowStudies</b><span class="kind">COURSES</span></div>
-          <p>Short interactive courses in music theory, Japanese kana and Chinese foundations. One idea at a time, then practice.</p>
-          <span class="url">luci0n.github.io/CrowStudies/</span>
-        </div>
-      </a>
-    </div>
-    <p style="margin:20px 0 0;font-size:12px;line-height:1.8;color:var(--dim)">CrowPSX resources:
-      <a href="https://luci0n.github.io/crowpsx/docs/">Documentation</a> &middot;
-      <a href="https://luci0n.github.io/crowpsx/guides/psx-shaders-unity-comparison/">Unity PSX shader comparison</a> &middot;
-      <a href="https://assetstore.unity.com/packages/vfx/shaders/crowpsx-retro-rendering-shader-suite-395934">Unity Asset Store</a>
-    </p>
+    <dl class="facts">
+      <div><dt>status</dt><dd><span class="status">open to work</span></dd></div>
+      <div><dt>focus</dt><dd>graphics, tools, web</dd></div>
+      <div><dt>writes</dt><dd>C#, HLSL, C++20, TypeScript, JS, Python</dd></div>
+      <div><dt>code</dt><dd><a href="https://github.com/Luci0n">github.com/Luci0n</a></dd></div>
+    </dl>
   </section>
 
-  <section id="repos">
+  <section class="sec" id="work">
     <div class="sec-head">
-      <h2>Repositories</h2>
-      <div class="filters" id="filters">
-        <button type="button" data-lang="All" aria-pressed="true">all</button>
-        <button type="button" data-lang="HTML" aria-pressed="false">html</button>
-        <button type="button" data-lang="C#" aria-pressed="false">c#</button>
-        <button type="button" data-lang="C++" aria-pressed="false">c++</button>
-        <button type="button" data-lang="TypeScript" aria-pressed="false">typescript</button>
+      <h2>Selected work</h2>
+      <span class="label">Six projects, roughly in the order I'd want to talk about them.</span>
+    </div>
+
+    <article class="proj">
+      <div class="proj-side"><span class="num">01</span>Unity asset<br>2026</div>
+      <div>
+        <h3>CrowPSX</h3>
+        <p class="kind">HLSL · Unity Built-in &amp; URP · sold on the Asset Store</p>
+        <figure>
+          <img src="assets/crowpsx.webp" alt="A moonlit street rendered in Unity with CrowPSX: wobbling vertices, warped textures and low color depth." width="1895" height="868" loading="lazy" decoding="async">
+          <figcaption>Demo scene, URP. Vertex snapping and affine warping on everything you see.</figcaption>
+        </figure>
+        <p>A retro rendering suite for Unity that reproduces the PS1's quirks on purpose: vertex snapping, affine texture warping, low-precision color. It covers surfaces, four-layer vertex painting, terrain, foliage with anchored wind, particles, decals and a procedural sky, so a whole scene can be built in one style.</p>
+        <p>A lot of the effort went into things nobody screenshots: a batch Material Manager, inspectors with presets and diagnostics, snapping that stays stable across both eyes in VR, and a docs site covering every shader and tool in the package.</p>
+        <div class="links">
+          <a href="https://luci0n.github.io/crowpsx/">Product site</a>
+          <a href="https://luci0n.github.io/crowpsx/docs/">Docs</a>
+          <a href="https://assetstore.unity.com/packages/vfx/shaders/crowpsx-retro-rendering-shader-suite-395934">Asset Store</a>
+          <a href="https://luci0n.github.io/crowpsx/guides/psx-shaders-unity-comparison/">PSX shader comparison</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="proj">
+      <div class="proj-side"><span class="num">02</span>Windows app<br>alpha</div>
+      <div>
+        <h3>FlashGuard</h3>
+        <p class="kind">C++20 · Direct3D 11 · DXGI Desktop Duplication</p>
+        <p>An experimental overlay for people who are sensitive to flashing light. It captures the desktop, figures out on the GPU which regions are flickering at hazardous frequencies, and limits how fast the displayed image can change while leaving ordinary motion alone. The overlay is click-through and excluded from capture so it never sees its own output.</p>
+        <div class="readout">
+          <div><b>260/260</b><span>surface-path checks passing on an RTX 3060</span></div>
+          <div><b>74.17%</b><span>on the hardest case, against a 70% bar I didn't lower</span></div>
+          <div><b>2</b><span>CI workflows: build, plus a GPU smoke test</span></div>
+        </div>
+        <p>It's alpha software and says so. The README carries a warning that it isn't medically validated, and it keeps a written diagnosis of the one real-world artifact that's still open.</p>
+        <div class="links"><a href="https://github.com/Luci0n/FlashGuard">Source and write-up</a></div>
+      </div>
+    </article>
+
+    <article class="proj">
+      <div class="proj-side"><span class="num">03</span>Unity package<br>MIT</div>
+      <div>
+        <h3>CrowFX</h3>
+        <p class="kind">C# · HLSL · Built-in, URP and HDRP · on OpenUPM</p>
+        <ul class="looks" aria-label="Four of the effect families CrowFX covers, approximated in CSS">
+          <li class="lk-crt"><span>CRT</span></li>
+          <li class="lk-dither"><span>Dither</span></li>
+          <li class="lk-poster"><span>Posterize</span></li>
+          <li class="lk-bleed"><span>RGB bleed</span></li>
+        </ul>
+        <p>Free post-processing for Unity that turns a camera into a CRT, a worn VHS tape, damaged film, or a PSX-era framebuffer. It ships 88 curated looks in 11 categories. Each inspector section previews through the real stage shader, and an effect you switch off adds no render pass. Of everything I've published, this one has the most stars.</p>
+        <div class="links">
+          <a href="https://github.com/Luci0n/CrowFX-Unity-Image-Effects">Source</a>
+          <a href="https://openupm.com/packages/com.luci0n.crowfx/">OpenUPM</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="proj">
+      <div class="proj-side"><span class="num">04</span>Web tool<br>2026</div>
+      <div class="split">
+        <div>
+          <h3>StatementCheck</h3>
+          <p class="kind">Vanilla JS · runs entirely in the browser</p>
+          <p>Bank CSV exports are a mess: three date orders, two decimal separators, debits that are sometimes negative and sometimes a separate column. StatementCheck maps the columns, normalizes signs and dates, and writes a Xero-ready file alongside an audit CSV explaining every warning and rejected row.</p>
+          <p>Files never leave the browser. Later commits went after the quiet failures: amounts now keep exact cents, conflicting sign columns get rejected instead of guessed, and cells that start like spreadsheet formulas are blocked.</p>
+          <div class="links">
+            <a href="statementcheck/">Use it</a>
+            <a href="statementcheck/xero-csv-format.html">Xero CSV guide</a>
+          </div>
+        </div>
+        <figure>
+          <img src="assets/statementcheck.webp" alt="StatementCheck's start screen: import settings on the left, an empty validation report on the right." width="1280" height="800" loading="lazy" decoding="async">
+        </figure>
+      </div>
+    </article>
+
+    <div class="pair">
+      <article class="proj">
+        <div class="proj-side"><span class="num">05</span>Website</div>
+        <div>
+          <h3>crowq3</h3>
+          <p class="kind">HTML · CSS · a little JS</p>
+          <figure><img src="assets/crowq3.webp" alt="The crowq3 join page for a Quake III Arena server, with a download button and setup steps." width="742" height="524" loading="lazy" decoding="async"></figure>
+          <p>Join page and admin reference for a Quake III Arena server. The page reads the live map, players and scores every 15 seconds and shows a filtered event feed. Banner clips that started at 1 to 5 MB were cut down to 200 to 560 KB.</p>
+          <div class="links"><a href="https://luci0n.github.io/crowq3/">Visit</a><a href="https://github.com/Luci0n/crowq3">Source</a></div>
+        </div>
+      </article>
+      <article class="proj">
+        <div class="proj-side"><span class="num">06</span>Website</div>
+        <div>
+          <h3>CrowStudies</h3>
+          <p class="kind">JavaScript · no dependencies to install</p>
+          <figure><img src="assets/crowstudies.webp" alt="The CrowStudies home page with Lessons and Studio panels." width="742" height="460" loading="lazy" decoding="async"></figure>
+          <p>Short lessons in music theory and a handful of languages, plus a Studio for notes, plans and tasks. The lessons run on CrowQuiz, a small engine I wrote that teaches one idea, drills it two or three times, then folds it into review. Music gets a playable keyboard, and the writing systems get stroke-order practice.</p>
+          <div class="links"><a href="https://luci0n.github.io/CrowStudies/">Visit</a><a href="https://github.com/Luci0n/CrowStudies">Source</a></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec" id="index">
+    <div class="sec-head">
+      <h2>Everything on GitHub</h2>
+      <div class="filters" id="filters" aria-label="Filter by language">
+        <button type="button" data-lang="all" aria-pressed="true">all</button>
+        <button type="button" data-lang="C#" aria-pressed="false">C#</button>
+        <button type="button" data-lang="C++" aria-pressed="false">C++</button>
+        <button type="button" data-lang="web" aria-pressed="false">web</button>
+        <button type="button" data-lang="Python" aria-pressed="false">Python</button>
       </div>
     </div>
-    <ul class="repos" id="list">
-      <li data-lang="HTML"><a href="https://github.com/Luci0n/crowq3">
-        <span class="n">01</span>
-        <span class="meta">
-          <span class="name-row"><b>crowq3</b><span class="lang">HTML</span></span>
-          <p>Join page and developer reference for a Quake III Arena server.</p>
-        </span>
-        <span class="arrow" aria-hidden="true">&rarr;</span>
-      </a></li>
-      <li data-lang="HTML"><a href="https://github.com/Luci0n/CrowStudies">
-        <span class="n">02</span>
-        <span class="meta">
-          <span class="name-row"><b>CrowStudies</b><span class="lang">HTML</span></span>
-          <p>Interactive courses built on the CrowQuiz engine.</p>
-        </span>
-        <span class="arrow" aria-hidden="true">&rarr;</span>
-      </a></li>
-      <li data-lang="C#"><a href="https://github.com/Luci0n/CrowFX-Unity-Image-Effects">
-        <span class="n">03</span>
-        <span class="meta">
-          <span class="name-row"><b>CrowFX</b><span class="lang">C#</span></span>
-          <p>Free CRT, VHS, film, glitch, dithering and retro post-processing for Unity.</p>
-        </span>
-        <span class="arrow" aria-hidden="true">&rarr;</span>
-      </a></li>
-      <li data-lang="C#"><a href="https://github.com/Luci0n/CrowSave-Unity-Persistence">
-        <span class="n">04</span>
-        <span class="meta">
-          <span class="name-row"><b>CrowSave</b><span class="lang">C#</span></span>
-          <p>Unity persistence framework for predictable save/load and deterministic scene travel.</p>
-        </span>
-        <span class="arrow" aria-hidden="true">&rarr;</span>
-      </a></li>
-      <li data-lang="C++"><a href="https://github.com/Luci0n/FlashGuard">
-        <span class="n">05</span>
-        <span class="meta">
-          <span class="name-row"><b>FlashGuard</b><span class="lang">C++</span></span>
-          <p>Experimental photosensitivity risk-reduction overlay for Windows, with GPU-based protection.</p>
-        </span>
-        <span class="arrow" aria-hidden="true">&rarr;</span>
-      </a></li>
-      <li data-lang="TypeScript"><a href="https://github.com/Luci0n/RutaLabs-Plataforma-de-Estudio">
-        <span class="n">06</span>
-        <span class="meta">
-          <span class="name-row"><b>RutaLabs</b><span class="lang">TypeScript</span></span>
-          <p>Plataforma de estudio.</p>
-        </span>
-        <span class="arrow" aria-hidden="true">&rarr;</span>
-      </a></li>
+    <table class="index">
+      <thead><tr><th>Project</th><th>What it is</th><th class="lng">Language</th><th class="yr">Updated</th></tr></thead>
+      <tbody id="list">
+        <tr data-lang="C#"><td><a href="https://github.com/Luci0n/CrowFX-Unity-Image-Effects">CrowFX</a></td><td class="what">Retro and analog post-processing for Unity, all three pipelines.</td><td class="lng">C#</td><td class="yr">Sep 2026</td></tr>
+        <tr data-lang="C#"><td><a href="https://github.com/Luci0n/CrowHorror">CrowHorror</a></td><td class="what">First-person horror foundation in Unity 6, built on my own CrowPSX, CrowFX and CrowSave.</td><td class="lng">C#</td><td class="yr">Oct 2026</td></tr>
+        <tr data-lang="C#"><td><a href="https://github.com/Luci0n/CrowSave-Unity-Persistence">CrowSave</a></td><td class="what">Save/load with explicit capture and apply, scoped IDs, tombstones and a checkpoint ring.</td><td class="lng">C#</td><td class="yr">Feb 2026</td></tr>
+        <tr data-lang="C#"><td><a href="https://github.com/Luci0n/CrowSave">CrowSave (v2)</a></td><td class="what">Current development repository for CrowSave.</td><td class="lng">C#</td><td class="yr">Oct 2026</td></tr>
+        <tr data-lang="C++"><td><a href="https://github.com/Luci0n/FlashGuard">FlashGuard</a></td><td class="what">GPU overlay that limits hazardous flashing on Windows.</td><td class="lng">C++</td><td class="yr">Sep 2026</td></tr>
+        <tr data-lang="Python"><td><a href="https://github.com/Luci0n/art-library-slave">art-library-slave</a></td><td class="what">Discord bot with memory and tools for songs, recipes, science and images, driven by plain conversation.</td><td class="lng">Python</td><td class="yr">Oct 2026</td></tr>
+        <tr data-lang="web"><td><a href="https://github.com/Luci0n/crowpsx">crowpsx</a></td><td class="what">Product site and documentation for the CrowPSX shader suite.</td><td class="lng">HTML</td><td class="yr">Oct 2026</td></tr>
+        <tr data-lang="web"><td><a href="https://github.com/Luci0n/crowq3">crowq3</a></td><td class="what">Quake III Arena server site with live status.</td><td class="lng">HTML</td><td class="yr">Sep 2026</td></tr>
+        <tr data-lang="web"><td><a href="https://github.com/Luci0n/CrowStudies">CrowStudies</a></td><td class="what">Interactive courses on the CrowQuiz engine.</td><td class="lng">JavaScript</td><td class="yr">Oct 2026</td></tr>
+        <tr data-lang="web"><td><a href="https://github.com/Luci0n/CrowStudies-source">CrowStudies-source</a></td><td class="what">Earlier source tree for CrowStudies.</td><td class="lng">HTML</td><td class="yr">Sep 2026</td></tr>
+        <tr data-lang="web"><td><a href="https://github.com/Luci0n/RutaLabs-Plataforma-de-Estudio">RutaLabs</a></td><td class="what">Spanish-language study platform, deployed on Vercel.</td><td class="lng">TypeScript</td><td class="yr">Feb 2026</td></tr>
+        <tr data-lang="web"><td><a href="https://github.com/Luci0n/luci0n.github.io">luci0n.github.io</a></td><td class="what">This site, plus StatementCheck.</td><td class="lng">HTML</td><td class="yr">Oct 2026</td></tr>
+        <tr data-lang="C#"><td><a href="https://github.com/Luci0n/VVMW">VVMW<span class="fork">fork</span></a></td><td class="what">VizVid, a video player frontend for VRChat.</td><td class="lng">C#</td><td class="yr">Oct 2026</td></tr>
+        <tr data-lang="web"><td><a href="https://github.com/Luci0n/openupm">openupm<span class="fork">fork</span></a></td><td class="what">The OpenUPM registry, forked to publish CrowFX.</td><td class="lng">YAML</td><td class="yr">Aug 2026</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="sec" id="about">
+    <div class="sec-head"><h2>How I work</h2></div>
+    <div class="about">
+      <div>
+        <p>I like software you can read from top to bottom. Most of my sites are the exact files the browser gets, and they keep working when the script doesn't load.</p>
+        <p>Docs count as part of the work. CrowPSX has its own documentation site, and the FlashGuard README spends as long on what's still broken as on what works.</p>
+        <p>I'd rather publish a number I can defend than a nicer one. FlashGuard's pass threshold has stayed at 70% through every rewrite.</p>
+        <p>My own packages get used together in CrowHorror, a horror game foundation, so I run into their rough edges before anybody else has to.</p>
+      </div>
+      <dl class="kit">
+        <div><dt>Engines and graphics</dt><dd>Unity (Built-in, URP, HDRP), HLSL, Direct3D 11, DXGI</dd></div>
+        <div><dt>Languages</dt><dd>C#, C++20, TypeScript, JavaScript, Python</dd></div>
+        <div><dt>Web</dt><dd>Hand-written HTML and CSS, GitHub Pages, Vercel</dd></div>
+        <div><dt>Shipping</dt><dd>Unity Asset Store, OpenUPM, GitHub Actions, technical writing</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <h2>Hiring for graphics, tools or the web?</h2>
+    <p>Get in touch through GitHub. I'm glad to walk through any of the code above on a call, including the parts I'd do differently now.</p>
+    <ul>
+      <li><a href="https://github.com/Luci0n">github.com/Luci0n</a></li>
+      <li><a href="https://assetstore.unity.com/packages/vfx/shaders/crowpsx-retro-rendering-shader-suite-395934">Unity Asset Store publisher page</a></li>
+      <li><a href="https://openupm.com/packages/com.luci0n.crowfx/">OpenUPM package</a></li>
     </ul>
   </section>
 
   <footer>
-    <p><a href="https://github.com/Luci0n/luci0n.github.io">source for this page</a></p>
+    <span>Joshua · luci0n · 2026</span>
+    <span>No trackers, no build step. <a href="https://github.com/Luci0n/luci0n.github.io">Page source</a></span>
   </footer>
 
 </div>
 
 <script>
-// Language filter. Without JS every row stays visible, which is the point.
+// Language filter for the project index. Without JS every row stays visible.
 (function () {
   var filters = document.getElementById('filters');
-  var items = Array.prototype.slice.call(document.querySelectorAll('#list li'));
-
+  var rows = Array.prototype.slice.call(document.querySelectorAll('#list tr'));
   filters.addEventListener('click', function (e) {
     var btn = e.target.closest('button');
     if (!btn) return;
     var lang = btn.dataset.lang;
-
     filters.querySelectorAll('button').forEach(function (b) {
       b.setAttribute('aria-pressed', String(b === btn));
     });
-
-    var n = 0;
-    items.forEach(function (li) {
-      var show = lang === 'All' || li.dataset.lang === lang;
-      li.hidden = !show;
-      if (show) li.querySelector('.n').textContent = String(++n).padStart(2, '0');
+    rows.forEach(function (tr) {
+      tr.hidden = !(lang === 'all' || tr.dataset.lang === lang);
     });
   });
 })();
