@@ -65,7 +65,18 @@ a:focus-visible,input:focus-visible{outline:2px solid #d8443f;outline-offset:3px
 @keyframes travel{0%{top:22px;opacity:0}10%{opacity:1}86%{opacity:1}100%{top:calc(100% - 27px);opacity:0}}
 @media (prefers-reduced-motion:reduce){.shot::after,.rv,.bar,.shot img,.topo{transition:none!important}.blink,.root>header,.intro>*{animation:none!important}.rail-dot{display:none}}
 @keyframes blink{50%{opacity:0}}
+.sum,.tog{display:none}
+@media (max-width:640px){
+  .js .proj:not(.open) .more{display:none!important}
+  .js .proj:not(.open) .sum{display:block}
+  .js section.proj{padding-top:36px!important}
+  .js .tog{display:inline-flex;align-self:flex-start;align-items:center;gap:6px;font:12px 'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;color:#ece8e4;background:#2a1312;border:0;padding:4px 10px;cursor:pointer}
+  .js .tog::after{content:"+";color:#b08f8b}
+  .js .tog[aria-expanded="true"]::after{content:"\2212"}
+  .sum{margin:0;color:#a9a6a0;font-size:15px}
+}
 </style>
+<script>document.documentElement.className+=" js"</script>
 </head>
 <body>
 <div class="root" id="root" style="position: relative; min-height: 100vh; background: #0a0a0b; color: #e9e7e3; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 16px; line-height: 1.6">
@@ -87,23 +98,24 @@ a:focus-visible,input:focus-visible{outline:2px solid #d8443f;outline-offset:3px
 
 <main style="max-width: 1240px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 48px)">
 
-<section id="unity" aria-labelledby="crowpsx-h" class="rv">
+<section id="unity" aria-labelledby="crowpsx-h" class="proj rv">
 <p style="margin: 0 0 22px; display: flex; align-items: center; gap: 14px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px; color: #8b8883"><span style="color: #e9e7e3; font-weight: 700; letter-spacing: 0.04em">UNITY</span><span>shaders, post-processing, systems</span><span aria-hidden="true" style="flex: 1; height: 1px; background: #232327"></span></p>
 <div style="display: flex; flex-wrap: wrap; gap: 24px clamp(28px, 4vw, 56px); align-items: flex-start">
-<a href="https://luci0n.github.io/crowpsx/" style="flex: 1.7 1 520px; min-width: 0; display: block">
+<a class="more" href="https://luci0n.github.io/crowpsx/" style="flex: 1.7 1 520px; min-width: 0; display: block">
 <span class="shot"><img src="assets/crowpsx.webp" alt="A moonlit street rendered in Unity with CrowPSX: wobbling vertices, warped textures and low color depth." width="1895" height="868" style="display: block; width: 100%; height: auto"></span>
 </a>
 <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
 <h2 id="crowpsx-h" style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 32px; font-weight: 800; letter-spacing: -0.04em; line-height: 1">CrowPSX</h2>
 <p style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px; color: #a9a6a0">PS1-style rendering for Unity · on the Asset Store</p>
-<p style="margin: 0; color: #a9a6a0; font-size: 15px">A shader suite that recreates how PS1 games looked: vertex snapping, affine texture warping and low color depth. One style across surfaces, terrain, foliage, particles, decals and the sky, with snapping that stays stable in VR.</p>
-<div style="display: flex; flex-wrap: wrap; gap: 8px 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 13px; padding-top: 4px">
+<button type="button" class="tog" aria-expanded="false">details</button>
+<p class="more" style="margin: 0; color: #a9a6a0; font-size: 15px">A shader suite that recreates how PS1 games looked: vertex snapping, affine texture warping and low color depth. One style across surfaces, terrain, foliage, particles, decals and the sky, with snapping that stays stable in VR.</p>
+<div class="more" style="display: flex; flex-wrap: wrap; gap: 8px 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 13px; padding-top: 4px">
 <a class="lk" href="https://luci0n.github.io/crowpsx/">product site</a>
 <a class="lk" href="https://luci0n.github.io/crowpsx/docs/">docs</a>
 <a class="lk" href="https://assetstore.unity.com/packages/vfx/shaders/crowpsx-retro-rendering-shader-suite-395934">asset store</a>
 <a class="lk" href="https://luci0n.github.io/crowpsx/guides/psx-shaders-unity-comparison/">PSX comparison</a>
 </div>
-<dl style="margin: 4px 0 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px; border-top: 1px solid #232327">
+<dl class="more" style="margin: 4px 0 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px; border-top: 1px solid #232327">
 <div style="display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-bottom: 1px solid #232327"><dt style="color: #8b8883">code</dt><dd style="margin: 0; text-align: right">HLSL, C#</dd></div>
 <div style="display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-bottom: 1px solid #232327"><dt style="color: #8b8883">pipelines</dt><dd style="margin: 0; text-align: right">Built-in, URP</dd></div>
 </dl>
@@ -111,25 +123,27 @@ a:focus-visible,input:focus-visible{outline:2px solid #d8443f;outline-offset:3px
 </div>
 </section>
 
-<section aria-labelledby="crowfx-h" class="rv" style="padding-top: clamp(56px, 7vw, 96px)">
+<section aria-labelledby="crowfx-h" class="proj rv" style="padding-top: clamp(56px, 7vw, 96px)">
 <div style="display: flex; flex-wrap: wrap; gap: 24px clamp(28px, 4vw, 56px); align-items: flex-start">
-<a href="https://github.com/Luci0n/CrowFX-Unity-Image-Effects" style="flex: 1.7 1 520px; min-width: 0; display: block">
+<a class="more" href="https://github.com/Luci0n/CrowFX-Unity-Image-Effects" style="flex: 1.7 1 520px; min-width: 0; display: block">
 <span class="shot"><img src="assets/crowfx.webp" alt="CrowFX preview: the same night street shown with CRT, VHS, film and dither or glitch looks." width="1280" height="640" style="display: block; width: 100%; height: auto"></span>
 </a>
 <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
 <h2 id="crowfx-h" style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 28px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1">CrowFX</h2>
-<p style="margin: 0; color: #a9a6a0; font-size: 15px">Free post-processing for Unity: CRT, VHS, film damage, glitches and dithering. The inspector previews each section with the real stage shader, and effects that are switched off add no render passes.</p>
-<div style="display: flex; gap: 28px; padding: 4px 0">
+<p class="sum">Free retro post-processing for Unity. 88 looks, MIT.</p>
+<button type="button" class="tog" aria-expanded="false">details</button>
+<p class="more" style="margin: 0; color: #a9a6a0; font-size: 15px">Free post-processing for Unity: CRT, VHS, film damage, glitches and dithering. The inspector previews each section with the real stage shader, and effects that are switched off add no render passes.</p>
+<div class="more" style="display: flex; gap: 28px; padding: 4px 0">
 <p style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 11px; color: #8b8883"><b style="display: block; font-size: 26px; font-weight: 700; letter-spacing: -0.03em; color: #e9e7e3">88</b>looks</p>
 <p style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 11px; color: #8b8883"><b style="display: block; font-size: 26px; font-weight: 700; letter-spacing: -0.03em; color: #e9e7e3">11</b>categories</p>
 <p style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 11px; color: #8b8883"><b style="display: block; font-size: 26px; font-weight: 700; letter-spacing: -0.03em; color: #e9e7e3">MIT</b>license</p>
 </div>
-<dl style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px; border-top: 1px solid #232327">
+<dl class="more" style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px; border-top: 1px solid #232327">
 <div style="display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-bottom: 1px solid #232327"><dt style="color: #8b8883">pipelines</dt><dd style="margin: 0; text-align: right">Built-in; URP, HDRP experimental</dd></div>
 <div style="display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-bottom: 1px solid #232327"><dt style="color: #8b8883">unity</dt><dd style="margin: 0; text-align: right">2022.3 LTS or newer</dd></div>
 <div style="display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-bottom: 1px solid #232327"><dt style="color: #8b8883">install</dt><dd style="margin: 0; text-align: right">OpenUPM, git URL, .unitypackage</dd></div>
 </dl>
-<div style="display: flex; flex-wrap: wrap; gap: 8px 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 13px">
+<div class="more" style="display: flex; flex-wrap: wrap; gap: 8px 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 13px">
 <a class="lk" href="https://github.com/Luci0n/CrowFX-Unity-Image-Effects">source</a>
 <a class="lk" href="https://openupm.com/packages/com.luci0n.crowfx/">openupm</a>
 </div>
@@ -137,21 +151,23 @@ a:focus-visible,input:focus-visible{outline:2px solid #d8443f;outline-offset:3px
 </div>
 </section>
 
-<section aria-labelledby="crowsave-h" class="rv" style="padding-top: clamp(56px, 7vw, 96px)">
+<section aria-labelledby="crowsave-h" class="proj rv" style="padding-top: clamp(56px, 7vw, 96px)">
 <div style="display: flex; flex-wrap: wrap; gap: 24px clamp(28px, 4vw, 56px); align-items: center">
 <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
 <h2 id="crowsave-h" style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 28px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1">CrowSave</h2>
-<p style="margin: 0; color: #a9a6a0; font-size: 15px">A save and load system for Unity. Each object captures and applies its own data, keyed by scope and ID, so two copies of a level can't overwrite each other. Destroyed objects stay destroyed after loading, unchanged objects are skipped when saving, and a small ring of in-memory checkpoints allows rewinding.</p>
-<dl style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px; border-top: 1px solid #232327">
+<p class="sum">Save and load system for Unity.</p>
+<button type="button" class="tog" aria-expanded="false">details</button>
+<p class="more" style="margin: 0; color: #a9a6a0; font-size: 15px">A save and load system for Unity. Each object captures and applies its own data, keyed by scope and ID, so two copies of a level can't overwrite each other. Destroyed objects stay destroyed after loading, unchanged objects are skipped when saving, and a small ring of in-memory checkpoints allows rewinding.</p>
+<dl class="more" style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px; border-top: 1px solid #232327">
 <div style="display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-bottom: 1px solid #232327"><dt style="color: #8b8883">identity</dt><dd style="margin: 0; text-align: right">(ScopeKey, EntityId)</dd></div>
 <div style="display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-bottom: 1px solid #232327"><dt style="color: #8b8883">storage</dt><dd style="margin: 0; text-align: right">RAM layer and disk layer</dd></div>
 <div style="display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-bottom: 1px solid #232327"><dt style="color: #8b8883">scene IDs</dt><dd style="margin: 0; text-align: right">GUID based, survive renames</dd></div>
 </dl>
-<div style="display: flex; flex-wrap: wrap; gap: 8px 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 13px">
+<div class="more" style="display: flex; flex-wrap: wrap; gap: 8px 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 13px">
 <a class="lk" href="https://github.com/Luci0n/CrowSave-Unity-Persistence">source</a>
 </div>
 </div>
-<figure style="position: relative; flex: 1.7 1 520px; min-width: 0; margin: 0; background: #111113; border: 1px solid #232327">
+<figure class="more" style="position: relative; flex: 1.7 1 520px; min-width: 0; margin: 0; background: #111113; border: 1px solid #232327">
 <figcaption style="display: flex; justify-content: space-between; gap: 12px; padding: 8px 14px; border-bottom: 1px solid #232327; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 11px; color: #8b8883"><span>Health.cs</span><a href="https://github.com/Luci0n/CrowSave-Unity-Persistence#quick-example" style="color: #a9a6a0">full example</a></figcaption>
 <pre style="margin: 0; padding: 20px 22px; max-height: 236px; overflow: hidden; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 13px; line-height: 1.65; color: #e9e7e3"><code><span style="display: block; color: #8b8883">[RequireComponent(typeof(PersistentId))]</span><span style="color: #a9a6a0">public sealed class</span> Health : PersistentMonoBehaviour
 {
@@ -180,22 +196,24 @@ a:focus-visible,input:focus-visible{outline:2px solid #d8443f;outline-offset:3px
 </div>
 </section>
 
-<section id="windows" aria-labelledby="fg-h" class="rv" style="padding-top: clamp(72px, 9vw, 120px)">
+<section id="windows" aria-labelledby="fg-h" class="proj rv" style="padding-top: clamp(72px, 9vw, 120px)">
 <p style="margin: 0 0 22px; display: flex; align-items: center; gap: 14px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px; color: #8b8883"><span style="color: #e9e7e3; font-weight: 700; letter-spacing: 0.04em">WINDOWS</span><span>C++20 · Direct3D 11</span><span aria-hidden="true" style="flex: 1; height: 1px; background: #232327"></span></p>
 <div style="display: flex; flex-wrap: wrap; gap: 28px clamp(28px, 4vw, 56px); align-items: flex-start">
 <div style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
 <h2 id="fg-h" style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: clamp(28px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1">FlashGuard</h2>
-<p style="margin: 0; color: #a9a6a0">An overlay for people sensitive to flashing light. It captures the desktop every frame, finds regions that flicker at risky rates on the GPU, and limits how fast those regions can change on screen while trying to leave normal motion alone.</p>
-<p style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px; color: #a9a6a0"><span style="color: #d8443f">experimental.</span> Not medically validated and not certified. The README says so up front.</p>
-<div style="display: flex; flex-wrap: wrap; gap: 28px; padding: 6px 0 2px">
+<p class="sum">Windows overlay that limits flashing light on screen.</p>
+<button type="button" class="tog" aria-expanded="false">details</button>
+<p class="more" style="margin: 0; color: #a9a6a0">An overlay for people sensitive to flashing light. It captures the desktop every frame, finds regions that flicker at risky rates on the GPU, and limits how fast those regions can change on screen while trying to leave normal motion alone.</p>
+<p class="more" style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px; color: #a9a6a0"><span style="color: #d8443f">experimental.</span> Not medically validated and not certified. The README says so up front.</p>
+<div class="more" style="display: flex; flex-wrap: wrap; gap: 28px; padding: 6px 0 2px">
 <p style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 11px; color: #8b8883"><b style="display: block; font-size: 26px; font-weight: 700; letter-spacing: -0.03em; color: #e9e7e3">260/260</b>surface checks pass, RTX 3060</p>
 <p style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 11px; color: #8b8883"><b style="display: block; font-size: 26px; font-weight: 700; letter-spacing: -0.03em; color: #e9e7e3">0.4.0</b>alpha 4</p>
 </div>
-<div style="display: flex; flex-wrap: wrap; gap: 8px 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 13px">
+<div class="more" style="display: flex; flex-wrap: wrap; gap: 8px 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 13px">
 <a class="lk" href="https://github.com/Luci0n/FlashGuard">source and write-up</a>
 </div>
 </div>
-<div style="flex: 1.2 1 440px; min-width: 0; display: flex; flex-direction: column; gap: 16px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace">
+<div class="more" style="flex: 1.2 1 440px; min-width: 0; display: flex; flex-direction: column; gap: 16px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace">
 
 <figure style="margin: 0; background: #111113; border: 1px solid #232327">
 <figcaption style="display: flex; justify-content: space-between; gap: 12px; padding: 8px 14px; border-bottom: 1px solid #232327; font-size: 11px; color: #8b8883"><span>surface path, per frame</span><a href="https://github.com/Luci0n/FlashGuard/blob/main/docs/ARCHITECTURE.md" style="color: #a9a6a0">architecture</a></figcaption>
@@ -231,23 +249,29 @@ a:focus-visible,input:focus-visible{outline:2px solid #d8443f;outline-offset:3px
 <section id="web" aria-labelledby="web-h" class="rv" style="padding-top: clamp(72px, 9vw, 120px)">
 <p style="margin: 0 0 22px; display: flex; align-items: center; gap: 14px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px; color: #8b8883"><span id="web-h" style="color: #e9e7e3; font-weight: 700; letter-spacing: 0.04em">WEB</span><span>plain HTML, CSS and JS, no build step</span><span aria-hidden="true" style="flex: 1; height: 1px; background: #232327"></span></p>
 <div style="display: flex; flex-wrap: wrap; gap: 40px 20px">
-<div style="flex: 1.6 1 0; min-width: 260px; display: flex; flex-direction: column; gap: 12px">
-<a href="statementcheck/" style="display: block"><span class="shot"><img src="assets/statementcheck.webp" alt="StatementCheck start screen with import settings and an empty validation report." width="1280" height="800" style="display: block; width: 100%; height: auto"></span></a>
+<div class="proj" style="flex: 1.6 1 0; min-width: 260px; display: flex; flex-direction: column; gap: 12px">
+<a class="more" href="statementcheck/" style="display: block"><span class="shot"><img src="assets/statementcheck.webp" alt="StatementCheck start screen with import settings and an empty validation report." width="1280" height="800" style="display: block; width: 100%; height: auto"></span></a>
 <h3 style="margin: 0; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 18px; letter-spacing: -0.02em">StatementCheck<small style="font-size: 11px; font-weight: 400; color: #8b8883; letter-spacing: 0">browser tool</small></h3>
-<p style="margin: 0; font-size: 15px; color: #a9a6a0">Turns bank CSV exports into a file Xero will import, and lists every row it changed or rejected. Runs in the browser; nothing is uploaded.</p>
-<p style="margin: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px"><a class="lk" href="statementcheck/">open</a><a class="lk" href="statementcheck/xero-csv-format.html">Xero CSV guide</a></p>
+<p class="sum">Bank CSV to Xero converter that runs in the browser.</p>
+<button type="button" class="tog" aria-expanded="false">details</button>
+<p class="more" style="margin: 0; font-size: 15px; color: #a9a6a0">Turns bank CSV exports into a file Xero will import, and lists every row it changed or rejected. Runs in the browser; nothing is uploaded.</p>
+<p class="more" style="margin: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px"><a class="lk" href="statementcheck/">open</a><a class="lk" href="statementcheck/xero-csv-format.html">Xero CSV guide</a></p>
 </div>
-<div style="flex: 1.416 1 0; min-width: 260px; display: flex; flex-direction: column; gap: 12px">
-<a href="https://luci0n.github.io/crowq3/" style="display: block"><span class="shot"><img src="assets/crowq3.webp" alt="The crowq3 join page for a Quake III Arena server." width="742" height="524" style="display: block; width: 100%; height: auto"></span></a>
+<div class="proj" style="flex: 1.416 1 0; min-width: 260px; display: flex; flex-direction: column; gap: 12px">
+<a class="more" href="https://luci0n.github.io/crowq3/" style="display: block"><span class="shot"><img src="assets/crowq3.webp" alt="The crowq3 join page for a Quake III Arena server." width="742" height="524" style="display: block; width: 100%; height: auto"></span></a>
 <h3 style="margin: 0; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 18px; letter-spacing: -0.02em">crowq3<small style="font-size: 11px; font-weight: 400; color: #8b8883; letter-spacing: 0">server site</small></h3>
-<p style="margin: 0; font-size: 15px; color: #a9a6a0">Join page and admin reference for a Quake III Arena server, with the live map, players and scores pulled from the server every 15 seconds.</p>
-<p style="margin: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px"><a class="lk" href="https://luci0n.github.io/crowq3/">open</a><a class="lk" href="https://github.com/Luci0n/crowq3">source</a></p>
+<p class="sum">Site for a Quake III Arena server, with live status.</p>
+<button type="button" class="tog" aria-expanded="false">details</button>
+<p class="more" style="margin: 0; font-size: 15px; color: #a9a6a0">Join page and admin reference for a Quake III Arena server, with the live map, players and scores pulled from the server every 15 seconds.</p>
+<p class="more" style="margin: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px"><a class="lk" href="https://luci0n.github.io/crowq3/">open</a><a class="lk" href="https://github.com/Luci0n/crowq3">source</a></p>
 </div>
-<div style="flex: 1.613 1 0; min-width: 260px; display: flex; flex-direction: column; gap: 12px">
-<a href="https://luci0n.github.io/CrowStudies/" style="display: block"><span class="shot"><img src="assets/crowstudies.webp" alt="The CrowStudies home page with Lessons and Studio panels." width="742" height="460" style="display: block; width: 100%; height: auto"></span></a>
+<div class="proj" style="flex: 1.613 1 0; min-width: 260px; display: flex; flex-direction: column; gap: 12px">
+<a class="more" href="https://luci0n.github.io/CrowStudies/" style="display: block"><span class="shot"><img src="assets/crowstudies.webp" alt="The CrowStudies home page with Lessons and Studio panels." width="742" height="460" style="display: block; width: 100%; height: auto"></span></a>
 <h3 style="margin: 0; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 18px; letter-spacing: -0.02em">CrowStudies<small style="font-size: 11px; font-weight: 400; color: #8b8883; letter-spacing: 0">lessons</small></h3>
-<p style="margin: 0; font-size: 15px; color: #a9a6a0">Short interactive lessons in music theory and languages, built on a small quiz engine. Includes a playable keyboard and stroke-order practice.</p>
-<p style="margin: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px"><a class="lk" href="https://luci0n.github.io/CrowStudies/">open</a><a class="lk" href="https://github.com/Luci0n/CrowStudies">source</a></p>
+<p class="sum">Interactive lessons in music theory and languages.</p>
+<button type="button" class="tog" aria-expanded="false">details</button>
+<p class="more" style="margin: 0; font-size: 15px; color: #a9a6a0">Short interactive lessons in music theory and languages, built on a small quiz engine. Includes a playable keyboard and stroke-order practice.</p>
+<p class="more" style="margin: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 12px"><a class="lk" href="https://luci0n.github.io/CrowStudies/">open</a><a class="lk" href="https://github.com/Luci0n/CrowStudies">source</a></p>
 </div>
 </div>
 </section>
@@ -284,6 +308,16 @@ a:focus-visible,input:focus-visible{outline:2px solid #d8443f;outline-offset:3px
 </footer>
 
 </div>
+<script>
+// On phones each project folds to its title and one line until opened.
+document.querySelectorAll('.tog').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var open = b.closest('.proj').classList.toggle('open');
+    b.setAttribute('aria-expanded', String(open));
+    b.textContent = open ? 'less' : 'details';
+  });
+});
+</script>
 <script>
 // Two pieces of motion, both off under prefers-reduced-motion:
 // 1. Topographic background, ported from CrowStudies (assets/topography.js):
