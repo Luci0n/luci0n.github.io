@@ -1,9 +1,9 @@
 # luci0n.github.io
 
-Portfolio for https://luci0n.github.io/: selected work with write-ups, a full
-index of public repositories, and contact details.
+Portfolio for https://luci0n.github.io/: write-ups of selected public projects
+and contact details.
 
-Plain HTML and CSS with one small script for the project index filter. No build
+Plain HTML and CSS with no JavaScript on the landing page itself. No build
 step, no dependencies, no third-party requests: JetBrains Mono is served from
 `assets/fonts/`, so nothing is fetched from Google.
 
@@ -15,8 +15,7 @@ assets/fonts/*.woff2       JetBrains Mono (latin, latin-ext)
 
 Edit `index.html` and push; GitHub Pages serves `main` at the root.
 
-When a new repository goes public, add a row to the table under
-`Everything on GitHub` and, if it belongs there, an entry in `Selected work`.
+To feature a new public project, add an entry under `Selected work`.
 The CrowFX tiles are CSS approximations, so they need no image file.
 
 ## CrowPSX

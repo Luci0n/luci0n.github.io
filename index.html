@@ -174,29 +174,6 @@ img{max-width:100%;display:block}
 .pair .proj-side{display:flex;gap:12px;align-items:baseline;margin-bottom:14px}
 .pair .proj-side .num{font-size:22px;margin:0}
 
-/* index table */
-.filters{display:flex;gap:6px;flex-wrap:wrap}
-.filters button{
-  font:inherit;font-family:var(--mono);font-size:12px;
-  background:transparent;color:var(--ink-2);
-  border:1px solid var(--rule);padding:5px 10px;cursor:pointer;border-radius:2px;
-}
-.filters button:hover{border-color:var(--ink-3);color:var(--ink)}
-.filters button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-table.index{width:100%;border-collapse:collapse;font-size:15px}
-.index th{
-  text-align:left;font-family:var(--mono);font-weight:400;font-size:12px;color:var(--ink-3);
-  padding:0 12px 10px 0;border-bottom:2px solid var(--ink);
-}
-.index td{padding:14px 12px 14px 0;border-bottom:1px solid var(--rule);vertical-align:baseline}
-.index tr[hidden]{display:none}
-.index td:first-child{white-space:nowrap}
-.index td:first-child a{font-weight:600;color:var(--ink);text-decoration:none}
-.index td:first-child a:hover{color:var(--red)}
-.index .what{color:var(--ink-2)}
-.index .lng,.index .yr{font-family:var(--mono);font-size:12px;color:var(--ink-3);white-space:nowrap}
-.index .fork{font-family:var(--mono);font-size:11px;color:var(--ink-3);border:1px solid var(--rule);padding:0 5px;margin-left:6px;font-weight:400}
-
 /* about */
 .about{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:clamp(28px,5vw,64px)}
 .about p{margin:0 0 16px;color:var(--ink-2);max-width:60ch;text-wrap:pretty}
@@ -230,7 +207,6 @@ footer a{color:inherit}
   .proj-side .num{font-size:22px;margin:0}
   .split,.pair,.about{grid-template-columns:1fr}
   .pair{gap:40px}
-  .index .lng,.index th.lng{display:none}
 }
 @media (max-width:560px){
   body{font-size:16px}
@@ -238,11 +214,6 @@ footer a{color:inherit}
   .looks{grid-template-columns:repeat(2,minmax(0,1fr))}
   .readout div{border-right:0;border-bottom:1px solid var(--rule)}
   .readout div:last-child{border-bottom:0}
-  .index .yr,.index th.yr{display:none}
-  .index td:first-child{white-space:normal}
-  .index tr{display:block;padding:12px 0;border-bottom:1px solid var(--rule)}
-  .index td{display:block;border:0;padding:0}
-  .index thead{display:none}
 }
 </style>
 </head>
@@ -253,7 +224,6 @@ footer a{color:inherit}
     <a class="handle" href="./"><i aria-hidden="true"></i>luci0n</a>
     <nav aria-label="Sections">
       <a href="#work">Work</a>
-      <a href="#index">All projects</a>
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -261,15 +231,15 @@ footer a{color:inherit}
 
   <section class="intro">
     <div>
-      <p class="kicker">Joshua, on GitHub as luci0n</p>
-      <h1>I make Unity look like 1997 on purpose, and Windows flash a little less.</h1>
-      <p>Most of my work lives inside Unity. There's a shader suite I sell on the Asset Store, a free post-processing package with 88 looks, and a save system built so that scene travel never shuffles state around. Outside the engine I wrote a Direct3D overlay that damps hazardous flashing, plus a few websites that ship as plain files.</p>
-      <p>I'm looking for a full-time role on a team that ships graphics, tools or web software. Everything below links to working code.</p>
+      <p class="kicker">luci0n on GitHub</p>
+      <h1>I'm Joshua. I make Unity shaders, tools and small web apps.</h1>
+      <p>Most of what's here is Unity work: a retro shader pack on the Asset Store, a free post-processing package and a save system. There's also a Windows app that tones down flashing on screen, and a few websites.</p>
+      <p>I'm looking for a full-time job. Each project below links to its code or a live version.</p>
     </div>
     <dl class="facts">
       <div><dt>status</dt><dd><span class="status">open to work</span></dd></div>
       <div><dt>focus</dt><dd>graphics, tools, web</dd></div>
-      <div><dt>writes</dt><dd>C#, HLSL, C++20, TypeScript, JS, Python</dd></div>
+      <div><dt>writes</dt><dd>C#, HLSL, C++, JavaScript</dd></div>
       <div><dt>code</dt><dd><a href="https://github.com/Luci0n">github.com/Luci0n</a></dd></div>
     </dl>
   </section>
@@ -277,7 +247,7 @@ footer a{color:inherit}
   <section class="sec" id="work">
     <div class="sec-head">
       <h2>Selected work</h2>
-      <span class="label">Six projects, roughly in the order I'd want to talk about them.</span>
+      <span class="label">Seven projects, roughly in the order I'd want to talk about them.</span>
     </div>
 
     <article class="proj">
@@ -376,39 +346,18 @@ footer a{color:inherit}
         </div>
       </article>
     </div>
+
+    <article class="proj">
+      <div class="proj-side"><span class="num">07</span>Unity package</div>
+      <div>
+        <h3>CrowSave</h3>
+        <p class="kind">C# · Unity</p>
+        <p>A save system for Unity where each object writes and restores its own data, keyed by scene and ID so two copies of a level can't overwrite each other. Destroyed objects stay destroyed after a reload, unchanged objects get skipped when saving, and there's a small ring of in-memory checkpoints for rewinding.</p>
+        <div class="links"><a href="https://github.com/Luci0n/CrowSave-Unity-Persistence">Source</a></div>
+      </div>
+    </article>
   </section>
 
-  <section class="sec" id="index">
-    <div class="sec-head">
-      <h2>Everything on GitHub</h2>
-      <div class="filters" id="filters" aria-label="Filter by language">
-        <button type="button" data-lang="all" aria-pressed="true">all</button>
-        <button type="button" data-lang="C#" aria-pressed="false">C#</button>
-        <button type="button" data-lang="C++" aria-pressed="false">C++</button>
-        <button type="button" data-lang="web" aria-pressed="false">web</button>
-        <button type="button" data-lang="Python" aria-pressed="false">Python</button>
-      </div>
-    </div>
-    <table class="index">
-      <thead><tr><th>Project</th><th>What it is</th><th class="lng">Language</th><th class="yr">Updated</th></tr></thead>
-      <tbody id="list">
-        <tr data-lang="C#"><td><a href="https://github.com/Luci0n/CrowFX-Unity-Image-Effects">CrowFX</a></td><td class="what">Retro and analog post-processing for Unity, all three pipelines.</td><td class="lng">C#</td><td class="yr">Sep 2026</td></tr>
-        <tr data-lang="C#"><td><a href="https://github.com/Luci0n/CrowHorror">CrowHorror</a></td><td class="what">First-person horror foundation in Unity 6, built on my own CrowPSX, CrowFX and CrowSave.</td><td class="lng">C#</td><td class="yr">Oct 2026</td></tr>
-        <tr data-lang="C#"><td><a href="https://github.com/Luci0n/CrowSave-Unity-Persistence">CrowSave</a></td><td class="what">Save/load with explicit capture and apply, scoped IDs, tombstones and a checkpoint ring.</td><td class="lng">C#</td><td class="yr">Feb 2026</td></tr>
-        <tr data-lang="C#"><td><a href="https://github.com/Luci0n/CrowSave">CrowSave (v2)</a></td><td class="what">Current development repository for CrowSave.</td><td class="lng">C#</td><td class="yr">Oct 2026</td></tr>
-        <tr data-lang="C++"><td><a href="https://github.com/Luci0n/FlashGuard">FlashGuard</a></td><td class="what">GPU overlay that limits hazardous flashing on Windows.</td><td class="lng">C++</td><td class="yr">Sep 2026</td></tr>
-        <tr data-lang="Python"><td><a href="https://github.com/Luci0n/art-library-slave">art-library-slave</a></td><td class="what">Discord bot with memory and tools for songs, recipes, science and images, driven by plain conversation.</td><td class="lng">Python</td><td class="yr">Oct 2026</td></tr>
-        <tr data-lang="web"><td><a href="https://github.com/Luci0n/crowpsx">crowpsx</a></td><td class="what">Product site and documentation for the CrowPSX shader suite.</td><td class="lng">HTML</td><td class="yr">Oct 2026</td></tr>
-        <tr data-lang="web"><td><a href="https://github.com/Luci0n/crowq3">crowq3</a></td><td class="what">Quake III Arena server site with live status.</td><td class="lng">HTML</td><td class="yr">Sep 2026</td></tr>
-        <tr data-lang="web"><td><a href="https://github.com/Luci0n/CrowStudies">CrowStudies</a></td><td class="what">Interactive courses on the CrowQuiz engine.</td><td class="lng">JavaScript</td><td class="yr">Oct 2026</td></tr>
-        <tr data-lang="web"><td><a href="https://github.com/Luci0n/CrowStudies-source">CrowStudies-source</a></td><td class="what">Earlier source tree for CrowStudies.</td><td class="lng">HTML</td><td class="yr">Sep 2026</td></tr>
-        <tr data-lang="web"><td><a href="https://github.com/Luci0n/RutaLabs-Plataforma-de-Estudio">RutaLabs</a></td><td class="what">Spanish-language study platform, deployed on Vercel.</td><td class="lng">TypeScript</td><td class="yr">Feb 2026</td></tr>
-        <tr data-lang="web"><td><a href="https://github.com/Luci0n/luci0n.github.io">luci0n.github.io</a></td><td class="what">This site, plus StatementCheck.</td><td class="lng">HTML</td><td class="yr">Oct 2026</td></tr>
-        <tr data-lang="C#"><td><a href="https://github.com/Luci0n/VVMW">VVMW<span class="fork">fork</span></a></td><td class="what">VizVid, a video player frontend for VRChat.</td><td class="lng">C#</td><td class="yr">Oct 2026</td></tr>
-        <tr data-lang="web"><td><a href="https://github.com/Luci0n/openupm">openupm<span class="fork">fork</span></a></td><td class="what">The OpenUPM registry, forked to publish CrowFX.</td><td class="lng">YAML</td><td class="yr">Aug 2026</td></tr>
-      </tbody>
-    </table>
-  </section>
 
   <section class="sec" id="about">
     <div class="sec-head"><h2>How I work</h2></div>
@@ -417,12 +366,11 @@ footer a{color:inherit}
         <p>I like software you can read from top to bottom. Most of my sites are the exact files the browser gets, and they keep working when the script doesn't load.</p>
         <p>Docs count as part of the work. CrowPSX has its own documentation site, and the FlashGuard README spends as long on what's still broken as on what works.</p>
         <p>I'd rather publish a number I can defend than a nicer one. FlashGuard's pass threshold has stayed at 70% through every rewrite.</p>
-        <p>My own packages get used together in CrowHorror, a horror game foundation, so I run into their rough edges before anybody else has to.</p>
       </div>
       <dl class="kit">
         <div><dt>Engines and graphics</dt><dd>Unity (Built-in, URP, HDRP), HLSL, Direct3D 11, DXGI</dd></div>
-        <div><dt>Languages</dt><dd>C#, C++20, TypeScript, JavaScript, Python</dd></div>
-        <div><dt>Web</dt><dd>Hand-written HTML and CSS, GitHub Pages, Vercel</dd></div>
+        <div><dt>Languages</dt><dd>C#, HLSL, C++20, JavaScript</dd></div>
+        <div><dt>Web</dt><dd>Hand-written HTML and CSS, GitHub Pages</dd></div>
         <div><dt>Shipping</dt><dd>Unity Asset Store, OpenUPM, GitHub Actions, technical writing</dd></div>
       </dl>
     </div>
@@ -445,23 +393,5 @@ footer a{color:inherit}
 
 </div>
 
-<script>
-// Language filter for the project index. Without JS every row stays visible.
-(function () {
-  var filters = document.getElementById('filters');
-  var rows = Array.prototype.slice.call(document.querySelectorAll('#list tr'));
-  filters.addEventListener('click', function (e) {
-    var btn = e.target.closest('button');
-    if (!btn) return;
-    var lang = btn.dataset.lang;
-    filters.querySelectorAll('button').forEach(function (b) {
-      b.setAttribute('aria-pressed', String(b === btn));
-    });
-    rows.forEach(function (tr) {
-      tr.hidden = !(lang === 'all' || tr.dataset.lang === lang);
-    });
-  });
-})();
-</script>
 </body>
 </html>
